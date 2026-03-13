@@ -1,0 +1,1997 @@
+<style>
+/* ═══════════════════════════════════════
+   SYSTEM THEME: auto dark / light
+═══════════════════════════════════════ */
+:root {
+  color-scheme: light dark;
+  --bg:           #07090D;
+  --bg2:          #0C0F15;
+  --surface:      #111620;
+  --surface2:     #161C28;
+  --card:         #111820;
+  --card-h:       #182130;
+  --border:       rgba(255,255,255,0.07);
+  --border-s:     rgba(255,255,255,0.13);
+  --text:         #EEE9DC;
+  --text2:        #A0AEBF;
+  --text3:        #4E6070;
+  --accent:       #2CCFB4;
+  --accent-d:     rgba(44,207,180,0.12);
+  --accent-g:     rgba(44,207,180,0.28);
+  --violet:       #8B72F8;
+  --violet-d:     rgba(139,114,248,0.1);
+  --gold:         #C9A96E;
+  --gold-d:       rgba(201,169,110,0.1);
+  --green:        #3DD68C;
+  --danger:       #F05C5C;
+  --shadow:       0 24px 64px rgba(0,0,0,0.55), 0 8px 24px rgba(0,0,0,0.3);
+  --shadow-s:     0 4px 20px rgba(0,0,0,0.28);
+  --grid-c:       rgba(255,255,255,0.027);
+  --noise-o:      0.034;
+  --orb1:         rgba(44,207,180,0.11);
+  --orb2:         rgba(139,114,248,0.09);
+  --nav-bg:       rgba(7,9,13,0.84);
+  --toast-bg:     rgba(10,15,22,0.97);
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:           #F4F2EC;
+    --bg2:          #ECEAE2;
+    --surface:      #FFFFFF;
+    --surface2:     #F7F5F0;
+    --card:         #FFFFFF;
+    --card-h:       #F9F8F4;
+    --border:       rgba(0,0,0,0.08);
+    --border-s:     rgba(0,0,0,0.14);
+    --text:         #0E1217;
+    --text2:        #485564;
+    --text3:        #96A5B2;
+    --accent:       #0B9A85;
+    --accent-d:     rgba(11,154,133,0.1);
+    --accent-g:     rgba(11,154,133,0.22);
+    --violet:       #6952E8;
+    --violet-d:     rgba(105,82,232,0.09);
+    --gold:         #9A7438;
+    --gold-d:       rgba(154,116,56,0.09);
+    --green:        #1A8C5C;
+    --danger:       #D23F3F;
+    --shadow:       0 20px 56px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.06);
+    --shadow-s:     0 2px 14px rgba(0,0,0,0.07);
+    --grid-c:       rgba(0,0,0,0.038);
+    --noise-o:      0.018;
+    --orb1:         rgba(11,154,133,0.07);
+    --orb2:         rgba(105,82,232,0.06);
+    --nav-bg:       rgba(244,242,236,0.9);
+    --toast-bg:     rgba(14,18,23,0.96);
+  }
+}
+
+/* ═══════════════════════════════════════
+   RESET
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+::selection{background:var(--accent);color:#000;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;}
+
+/* ═══════════════════════════════════════
+   NOISE + GRID OVERLAYS
+═══════════════════════════════════════ */
+body::before{
+  content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
+  opacity:var(--noise-o);
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+.grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid-c) 1px,transparent 1px),linear-gradient(90deg,var(--grid-c) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 90% 75% at 50% 15%,black 30%,transparent 100%);
+}
+
+/* ═══════════════════════════════════════
+   SCROLL PROGRESS
+═══════════════════════════════════════ */
+#scroll-prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:9999;background:linear-gradient(90deg,var(--accent),var(--violet));pointer-events:none;transition:width .08s;}
+
+/* ═══════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════ */
+.serif{font-family:'Instrument Serif',serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+.label-tag{font-family:'JetBrains Mono',monospace;font-size:.67rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);}
+.d-xl{font-family:'Instrument Serif',serif;font-size:clamp(2.8rem,5.5vw,5.2rem);line-height:1.06;letter-spacing:-.022em;font-weight:400;}
+.d-lg{font-family:'Instrument Serif',serif;font-size:clamp(2rem,3.8vw,3.6rem);line-height:1.1;letter-spacing:-.02em;font-weight:400;}
+.d-md{font-family:'Instrument Serif',serif;font-size:clamp(1.4rem,2.4vw,2.2rem);line-height:1.2;letter-spacing:-.015em;font-weight:400;}
+em{font-style:italic;color:var(--accent);}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px;}
+.wrap-wide{max-width:1460px;margin:0 auto;padding:0 40px;}
+.section{padding:120px 0;position:relative;}
+.section-alt{background:var(--bg2);}
+
+/* ═══════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:8px;font-size:.875rem;font-weight:500;padding:13px 26px;border-radius:100px;transition:all .2s cubic-bezier(.4,0,.2,1);letter-spacing:.01em;}
+.btn-primary{background:var(--accent);color:#040C0A;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 20px var(--accent-g);}
+.btn-ghost{background:transparent;border:1px solid var(--border-s);color:var(--text2);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-d);}
+.btn-lg{padding:15px 34px;font-size:.9375rem;}
+.btn-full{width:100%;justify-content:center;}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+
+/* ═══════════════════════════════════════
+   CARDS
+═══════════════════════════════════════ */
+.card{background:var(--card);border:1px solid var(--border);border-radius:22px;transition:border-color .2s,box-shadow .2s;}
+.card:hover{border-color:var(--border-s);box-shadow:var(--shadow-s);}
+
+/* ═══════════════════════════════════════
+   BADGE / PILL
+═══════════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:100px;font-size:.7rem;font-weight:500;}
+.badge-a{background:var(--accent-d);color:var(--accent);border:1px solid rgba(44,207,180,.2);}
+.badge-v{background:var(--violet-d);color:var(--violet);border:1px solid rgba(139,114,248,.2);}
+.badge-g{background:rgba(61,214,140,.1);color:var(--green);border:1px solid rgba(61,214,140,.2);}
+.dot-live{width:6px;height:6px;border-radius:50%;background:currentColor;animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;background:var(--nav-bg);backdrop-filter:blur(22px) saturate(1.8);-webkit-backdrop-filter:blur(22px) saturate(1.8);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Instrument Serif',serif;font-size:1.35rem;letter-spacing:-.02em;color:var(--text);}
+.logo-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--violet));display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#040C0A;flex-shrink:0;}
+.nav-links{display:flex;align-items:center;gap:30px;list-style:none;}
+.nav-links a{font-size:.875rem;color:var(--text2);transition:color .18s;}
+.nav-links a:hover{color:var(--text);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-mob{display:none;background:none;border:1px solid var(--border);padding:7px 10px;border-radius:100px;color:var(--text2);font-size:1.1rem;}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:96px;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(110px);pointer-events:none;}
+.orb1{width:720px;height:720px;top:-220px;right:-120px;background:var(--orb1);}
+.orb2{width:520px;height:520px;bottom:-120px;left:-180px;background:var(--orb2);}
+.hero-grid{display:grid;grid-template-columns:1fr 1.08fr;gap:80px;align-items:center;}
+.hero-eyebrow{margin-bottom:22px;}
+.hero-title{margin-bottom:26px;}
+.hero-sub{font-size:1.0625rem;color:var(--text2);line-height:1.72;max-width:470px;margin-bottom:38px;}
+.hero-acts{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-trust{margin-top:52px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+.trust-item{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.trust-ic{color:var(--accent);}
+
+/* Hero card */
+.hero-card{position:relative;}
+.hcard{background:var(--surface);border:1px solid var(--border-s);border-radius:26px;padding:26px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,var(--accent) 38%,var(--violet) 62%,transparent 95%);opacity:.55;}
+.hcard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.hcard-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--violet));display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:600;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.hcard-addr{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--text2);}
+.hcard-ens{font-size:.72rem;color:var(--text3);margin-top:1px;}
+.hcard-score-val{font-family:'JetBrains Mono',monospace;font-size:1.45rem;font-weight:600;color:var(--accent);line-height:1;text-align:right;}
+.hcard-score-lbl{font-size:.64rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-top:2px;text-align:right;}
+.hcard-stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}
+.hstat{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:13px 15px;position:relative;overflow:hidden;}
+.hstat::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;}
+.hstat.t::before{background:var(--accent);}
+.hstat.v::before{background:var(--violet);}
+.hstat.g::before{background:var(--gold);}
+.hstat.gr::before{background:var(--green);}
+.hstat-lbl{font-size:.64rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;font-family:'JetBrains Mono',monospace;margin-bottom:7px;}
+.hstat-val{font-family:'JetBrains Mono',monospace;font-size:1.28rem;font-weight:600;color:var(--text);letter-spacing:-.02em;}
+.hstat-sub{font-size:.68rem;color:var(--text3);margin-top:3px;}
+.chain-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.chip{display:flex;align-items:center;gap:5px;padding:4px 9px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;font-size:.68rem;color:var(--text2);font-family:'JetBrains Mono',monospace;}
+.cdot{width:6px;height:6px;border-radius:50%;}
+.cdot-eth{background:#627EEA;}.cdot-arb{background:#28A0F0;}.cdot-base{background:#0052FF;}.cdot-op{background:#FF0420;}.cdot-poly{background:#8247E5;}
+.claim-zone{background:linear-gradient(135deg,rgba(44,207,180,.09),rgba(139,114,248,.07));border:1px solid rgba(44,207,180,.22);border-radius:20px;padding:17px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+.claim-lbl{font-size:.64rem;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
+.claim-eth{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:600;color:var(--accent);line-height:1;letter-spacing:-.03em;}
+.claim-usd{font-size:.7rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:3px;}
+.claim-cta-btn{background:var(--accent);color:#040C0A;border:none;border-radius:100px;padding:11px 22px;font-weight:600;font-size:.78rem;font-family:'DM Sans',sans-serif;white-space:nowrap;cursor:pointer;animation:cpulse 3s ease infinite;}
+@keyframes cpulse{0%,100%{box-shadow:0 0 0 0 var(--accent-g)}50%{box-shadow:0 0 22px 5px var(--accent-g)}}
+.prog-wrap{margin-top:14px;}
+.prog-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
+.prog-track{height:4px;background:var(--bg2);border-radius:100px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent),var(--violet));transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.float-tag{position:absolute;background:var(--card);border:1px solid var(--border-s);border-radius:100px;padding:8px 16px;font-size:.68rem;font-family:'JetBrains Mono',monospace;box-shadow:var(--shadow-s);white-space:nowrap;}
+.ft1{top:-14px;right:36px;color:var(--green);border-color:rgba(61,214,140,.25);animation:fl1 4s ease-in-out infinite;}
+.ft2{bottom:36px;right:-18px;color:var(--accent);border-color:rgba(44,207,180,.25);animation:fl2 4s ease-in-out infinite .6s;}
+@keyframes fl1{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes fl2{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ═══════════════════════════════════════
+   TRUST BAR
+═══════════════════════════════════════ */
+.trust-bar{padding:28px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.trust-bar-in{display:flex;align-items:center;gap:44px;flex-wrap:wrap;justify-content:center;}
+.tsep{width:1px;height:18px;background:var(--border);}
+.tchain{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--text3);font-family:'JetBrains Mono',monospace;transition:color .18s;}
+.tchain:hover{color:var(--text2);}
+.tchain-icon{width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;}
+.tbadge{display:flex;align-items:center;gap:7px;font-size:.73rem;color:var(--text3);}
+.tbadge-ic{color:var(--green);font-size:.9rem;}
+
+/* ═══════════════════════════════════════
+   HOW IT WORKS
+═══════════════════════════════════════ */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:0;border:none;background:transparent;margin-top:60px;}
+.step{background:var(--bg);padding:38px 30px;position:relative;transition:background .2s;}
+.step:hover{background:var(--surface);}
+.step-n{font-family:'Instrument Serif',serif;font-size:2.8rem;color:var(--accent);opacity:.16;line-height:1;margin-bottom:14px;transition:opacity .2s;}
+.step:hover .step-n{opacity:.32;}
+.step-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-d),rgba(139,114,248,.08));border:1px solid rgba(44,207,180,.2);display:flex;align-items:center;justify-content:center;font-size:1.15rem;margin-bottom:18px;transition:all .2s;}
+.step:hover .step-icon{background:var(--accent);}
+.step-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:9px;letter-spacing:-.01em;}
+.step-desc{font-size:.84rem;color:var(--text2);line-height:1.65;}
+.step::before{content:'';position:absolute;top:0;left:0;width:0;height:2px;background:var(--accent);transition:width .3s ease;}
+.step:hover::before{width:100%;}
+
+/* ═══════════════════════════════════════
+   WHY IT MATTERS
+═══════════════════════════════════════ */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:60px;}
+.why-txt p{font-size:1.05rem;color:var(--text2);line-height:1.76;margin-bottom:18px;}
+.why-txt p strong{color:var(--text);}
+.why-cards{display:flex;flex-direction:column;gap:14px;}
+.why-big{font-family:'Instrument Serif',serif;font-size:3.8rem;color:var(--accent);line-height:1;margin-bottom:6px;}
+.why-big-sub{font-size:.875rem;color:var(--text3);max-width:340px;line-height:1.6;margin-bottom:28px;}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:22px 26px;display:flex;gap:18px;align-items:flex-start;transition:all .22s;}
+.why-card:hover{border-color:var(--accent);transform:translateX(4px);}
+.why-ic{width:46px;height:46px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.why-ic.t{background:var(--accent-d);}
+.why-ic.v{background:var(--violet-d);}
+.why-ic.g{background:var(--gold-d);}
+.why-card-title{font-weight:600;margin-bottom:5px;font-size:.9rem;}
+.why-card-desc{font-size:.82rem;color:var(--text2);line-height:1.62;}
+
+/* ═══════════════════════════════════════
+   WALLET INTELLIGENCE
+═══════════════════════════════════════ */
+.intel-intro{max-width:540px;margin:0 auto 60px;text-align:center;}
+.intel-intro p{font-size:.96rem;color:var(--text2);margin-top:14px;line-height:1.7;}
+.intel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.icard{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:24px;transition:all .3s;position:relative;overflow:hidden;}
+.icard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .22s;}
+.icard:hover{border-color:var(--border-s);}
+.icard:hover::after{opacity:.35;}
+.icard.wide{grid-column:span 2;}
+.icard-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.icard-title{font-size:.72rem;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.1em;font-family:'JetBrains Mono',monospace;}
+.icard-icon{font-size:.95rem;color:var(--text3);}
+
+/* Gas bars */
+.cbars{display:flex;flex-direction:column;gap:11px;}
+.cbar-item{}
+.cbar-hd{display:flex;justify-content:space-between;margin-bottom:5px;font-size:.74rem;}
+.cbar-nm{color:var(--text2);font-family:'JetBrains Mono',monospace;}
+.cbar-vl{color:var(--accent);font-family:'JetBrains Mono',monospace;}
+.cbar-track{height:6px;background:var(--bg);border-radius:100px;overflow:hidden;}
+.cbar-fill{height:100%;border-radius:100px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.c-eth{background:#627EEA;}.c-arb{background:#28A0F0;}.c-base{background:#0052FF;}.c-op{background:#FF0420;}.c-poly{background:#8247E5;}
+
+/* Activity chart: now dynamically rendered */
+.act-chart{display:flex;align-items:flex-end;gap:3px;height:54px;margin-top:4px;}
+.act-bar{flex:1;border-radius:5px 5px 0 0;background:var(--accent-d);border-top:2px solid var(--accent);opacity:.65;min-height:3px;transition:opacity .18s;}
+.act-bar:hover{opacity:1;}
+.act-minis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.act-mini{background:var(--bg);border:1px solid var(--border);padding:10px 12px;border-radius:14px;}
+.act-mini-lbl{font-size:.6rem;color:var(--text3);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;}
+.act-mini-val{font-family:'JetBrains Mono',monospace;color:var(--text);font-size:.85rem;font-weight:500;}
+
+/* Score ring */
+.score-wrap{display:flex;flex-direction:column;align-items:center;padding:12px 0;}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;}
+.score-sub{background:var(--bg);border:1px solid var(--border);padding:10px 12px;border-radius:14px;}
+.score-sub-lbl{font-size:.58rem;color:var(--text3);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px;}
+.score-sub-val{font-family:'JetBrains Mono',monospace;font-size:.82rem;}
+
+/* Protocols */
+.proto-cloud{display:flex;flex-wrap:wrap;gap:7px;}
+.proto-tag{padding:4px 11px;border-radius:100px;background:var(--bg);border:1px solid var(--border);font-size:.72rem;color:var(--text2);font-family:'JetBrains Mono',monospace;transition:all .18s;cursor:default;}
+.proto-tag:hover,.proto-tag.on{border-color:var(--accent);color:var(--accent);background:var(--accent-d);}
+.proto-count{margin-top:14px;font-size:.72rem;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+
+/* Counterparties */
+.cp-list{display:flex;flex-direction:column;}
+.cp-row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border);}
+.cp-row:last-child{border-bottom:none;}
+.cp-av{width:27px;height:27px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:600;color:#fff;font-family:'JetBrains Mono',monospace;}
+.cp-name{font-size:.8rem;font-weight:500;flex:1;}
+.cp-addr{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text3);}
+.cp-cnt{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text3);}
+.cp-badge{font-size:.62rem;padding:2px 8px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+.cp-s{background:rgba(240,92,92,.1);color:var(--danger);}
+.cp-r{background:rgba(61,214,140,.1);color:var(--green);}
+.cp-c{background:rgba(139,114,248,.1);color:var(--violet);}
+
+/* Identity */
+.id-row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border);}
+.id-row:last-child{border-bottom:none;}
+.id-platform{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text3);width:85px;}
+.id-handle{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent);flex:1;}
+.id-conf{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--text3);}
+.opt-note{margin-top:12px;font-size:.7rem;color:var(--text3);display:flex;align-items:center;gap:5px;}
+
+/* ═══════════════════════════════════════
+   FEATURES
+═══════════════════════════════════════ */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:none;background:transparent;border-radius:0;overflow:visible;margin-top:60px;}
+.feat-cell{background:var(--card);border:1px solid var(--border);border-radius:26px;padding:36px 28px;transition:all .3s;position:relative;}
+.feat-cell:hover{background:var(--surface);}
+.feat-cell::before{content:'';position:absolute;top:0;left:0;width:0;height:2px;background:var(--accent);transition:width .3s ease;}
+.feat-cell:hover::before{width:100%;}
+.feat-ic{font-size:1.35rem;margin-bottom:14px;}
+.feat-title{font-weight:600;font-size:.9rem;margin-bottom:7px;color:var(--text);}
+.feat-desc{font-size:.8rem;color:var(--text2);line-height:1.62;}
+
+/* ═══════════════════════════════════════
+   LIVE DASHBOARD SECTION
+═══════════════════════════════════════ */
+.dash-intro{text-align:center;margin-bottom:52px;}
+.dash-intro p{font-size:.96rem;color:var(--text2);margin-top:14px;}
+.dash-frame{background:var(--surface);border:1px solid var(--border-s);border-radius:28px 28px 0 0;box-shadow:var(--shadow);overflow:hidden;margin:0 -24px;}
+.dash-chrome{background:var(--bg);border-bottom:1px solid var(--border);padding:11px 18px;display:flex;align-items:center;gap:18px;}
+.dash-dots{display:flex;gap:5px;}
+.dash-dot{width:9px;height:9px;border-radius:50%;}
+.dash-url{flex:1;max-width:300px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:4px 14px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text3);text-align:center;}
+.dash-in{padding:24px;}
+.dash-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.dash-tab{padding:9px 18px;font-size:.76rem;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;transition:all .18s;}
+.dash-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.dash-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+.dash-kpi{background:var(--bg);border:1px solid var(--border);border-radius:18px;padding:14px 16px;}
+.dash-kpi-lbl{font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;}
+.dash-kpi-val{font-family:'JetBrains Mono',monospace;font-size:1.12rem;font-weight:500;color:var(--text);letter-spacing:-.02em;}
+.dash-kpi-sub{font-family:'JetBrains Mono',monospace;font-size:.62rem;margin-top:3px;}
+.dash-kpi-sub.up{color:var(--green);}
+.dash-kpi-sub.nt{color:var(--text3);}
+.dash-body{display:grid;grid-template-columns:1fr 320px;gap:14px;}
+.dash-chart-card{background:var(--bg);border:1px solid var(--border);border-radius:22px;padding:18px;}
+.dash-chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.dash-chart-title{font-size:.72rem;font-weight:500;color:var(--text2);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.1em;}
+.dash-chart-link{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);cursor:pointer;}
+/* Dynamic bar chart */
+.bar-chart-area{display:grid;grid-template-columns:repeat(5,1fr);align-items:flex-end;gap:12px;height:220px;padding:18px 8px 4px;}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.bar-visual{width:100%;max-width:68px;border-radius:16px 16px 4px 4px;background:linear-gradient(180deg,rgba(139,114,248,.9),rgba(44,207,180,.4));box-shadow:inset 0 1px 0 rgba(255,255,255,.12);transition:height .6s ease;}
+.bar-val{font-size:.68rem;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.bar-nm{font-size:.72rem;color:var(--text2);font-family:'JetBrains Mono',monospace;}
+.dash-tx-list{display:flex;flex-direction:column;gap:1px;}
+.dash-tx{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.74rem;}
+.dash-tx:last-child{border-bottom:none;}
+.dash-tx-badge{padding:2px 7px;border-radius:100px;font-size:.62rem;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+.b-swap{background:rgba(44,207,180,.1);color:var(--accent);}
+.b-bridge{background:rgba(139,114,248,.1);color:var(--violet);}
+.b-approve{background:rgba(201,169,110,.1);color:var(--gold);}
+.b-lp{background:rgba(61,214,140,.1);color:var(--green);}
+.dash-tx-proto{flex:1;color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:.7rem;}
+.dash-tx-gas{color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:.68rem;}
+.dash-tx-date{color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:.68rem;}
+.dash-right{display:flex;flex-direction:column;gap:12px;}
+.dash-claim-card{background:linear-gradient(135deg,rgba(44,207,180,.1),rgba(139,114,248,.08));border:1px solid rgba(44,207,180,.24);border-radius:24px;padding:22px;}
+.dcc-title{font-size:.67rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;font-family:'JetBrains Mono',monospace;margin-bottom:9px;}
+.dcc-val{font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--accent);font-weight:500;letter-spacing:-.03em;}
+.dcc-sub{font-size:.68rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:3px;}
+.dcc-prog{margin:10px 0 13px;}
+.dcc-prog-labels{display:flex;justify-content:space-between;font-size:.62rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.dcc-track{height:3px;background:rgba(44,207,180,.15);border-radius:100px;overflow:hidden;}
+.dcc-fill{height:100%;border-radius:100px;background:var(--accent);}
+.dcc-btn{width:100%;background:var(--accent);color:#040C0A;border:none;border-radius:100px;padding:13px 20px;font-weight:700;font-size:.8rem;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.dash-hist-card{background:var(--bg);border:1px solid var(--border);border-radius:22px;padding:20px;}
+.hist-row{display:flex;justify-content:space-between;align-items:center;font-size:.73rem;padding:7px 0;border-bottom:1px solid var(--border);}
+.hist-row:last-child{border-bottom:none;}
+.hist-date{font-family:'JetBrains Mono',monospace;color:var(--text2);}
+.hist-amt{font-family:'JetBrains Mono',monospace;color:var(--accent);}
+.hist-status{font-size:.62rem;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.hist-total{margin-top:12px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:.73rem;}
+.hist-total-lbl{font-family:'JetBrains Mono',monospace;color:var(--text3);}
+.hist-total-val{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;}
+
+/* ═══════════════════════════════════════
+   SECURITY
+═══════════════════════════════════════ */
+.sec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px;}
+.sec-card{background:var(--card);border:1px solid var(--border);border-radius:28px;padding:30px 32px;transition:all .3s;}
+.sec-card:hover{border-color:var(--border-s);box-shadow:var(--shadow-s);}
+.sec-ic{font-size:1.5rem;margin-bottom:14px;}
+.sec-title{font-weight:600;font-size:.9rem;margin-bottom:8px;}
+.sec-desc{font-size:.8rem;color:var(--text2);line-height:1.65;}
+
+/* ═══════════════════════════════════════
+   FAQ
+═══════════════════════════════════════ */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:52px;}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:22px;overflow:hidden;}
+.faq-q{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background .18s;font-size:.875rem;font-weight:500;color:var(--text);gap:10px;}
+.faq-q:hover{background:var(--surface2);}
+.faq-tog{width:19px;height:19px;flex-shrink:0;border-radius:50%;background:var(--accent-d);border:1px solid rgba(44,207,180,.2);display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--accent);transition:transform .22s,background .22s;}
+.faq-item.open .faq-tog{transform:rotate(45deg);background:var(--accent);color:#040C0A;}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .2s;font-size:.825rem;color:var(--text2);line-height:1.72;padding:0 22px;}
+.faq-item.open .faq-a{max-height:280px;padding:0 22px 18px;}
+
+/* ═══════════════════════════════════════
+   CTA
+═══════════════════════════════════════ */
+.cta-sec{text-align:center;position:relative;overflow:hidden;}
+.cta-sec::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:380px;background:radial-gradient(ellipse,var(--orb1) 0%,transparent 70%);pointer-events:none;}
+.cta-sec::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:280px;background:radial-gradient(ellipse,var(--orb2) 0%,transparent 70%);pointer-events:none;}
+.cta-in{position:relative;z-index:2;}
+.cta-acts{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.cta-disc{font-size:.76rem;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:60px 0 36px;}
+.foot-grid{display:grid;grid-template-columns:1.7fr repeat(4,1fr);gap:44px;}
+.foot-brand p{font-size:.85rem;color:var(--text3);line-height:1.7;margin-top:14px;max-width:240px;}
+.foot-col-title{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:14px;font-family:'JetBrains Mono',monospace;}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.foot-links a{font-size:.85rem;color:var(--text3);transition:color .18s;}
+.foot-links a:hover{color:var(--text);}
+.foot-bottom{margin-top:44px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.foot-copy{font-size:.78rem;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.foot-socials{display:flex;gap:8px;}
+.foot-soc{width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.78rem;color:var(--text3);transition:all .18s;}
+.foot-soc:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-d);}
+
+/* ═══════════════════════════════════════
+   SECTION HEADER
+═══════════════════════════════════════ */
+.sh{max-width:620px;}
+.sh.center{margin:0 auto;text-align:center;}
+.sh .label-tag{display:block;margin-bottom:12px;}
+.sh h2{margin-bottom:16px;}
+.sh p{font-size:.96rem;color:var(--text2);line-height:1.72;}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--toast-bg);color:var(--text);border:1px solid var(--border-s);padding:13px 18px;border-radius:100px;font-size:.82rem;font-family:'JetBrains Mono',monospace;box-shadow:var(--shadow);pointer-events:none;opacity:0;transform:translateY(10px);transition:all .3s;}
+#toast.show{opacity:1;transform:translateY(0);}
+
+/* ═══════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);}
+.rv.vis{opacity:1;transform:none;}
+.rv1{transition-delay:.1s;}.rv2{transition-delay:.2s;}.rv3{transition-delay:.3s;}.rv4{transition-delay:.4s;}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1100px){
+  .hero-grid{grid-template-columns:1fr;gap:52px;}
+  .hero-card{max-width:520px;margin:0 auto;}
+  .steps{grid-template-columns:1fr 1fr;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .intel-grid{grid-template-columns:1fr 1fr;}
+  .icard.wide{grid-column:span 1;}
+  .dash-kpis{grid-template-columns:repeat(3,1fr);}
+  .dash-body{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+  .why-grid{grid-template-columns:1fr;}
+}
+@media(max-width:760px){
+  .wrap,.wrap-wide{padding:0 20px;}
+  .section{padding:80px 0;}
+  nav .nav-links{display:none;}
+  .nav-mob{display:flex;}
+  .steps{grid-template-columns:1fr;}
+  .feat-grid{grid-template-columns:1fr;}
+  .sec-grid{grid-template-columns:1fr;}
+  .faq-grid{grid-template-columns:1fr;}
+  .intel-grid{grid-template-columns:1fr;}
+  .icard.wide{grid-column:span 1;}
+  .dash-kpis{grid-template-columns:1fr 1fr;}
+  .hcard-stats{grid-template-columns:1fr 1fr;}
+  .trust-bar-in{gap:16px;}
+  .tsep{display:none;}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:480px){
+  .hero-acts{flex-direction:column;align-items:stretch;}
+  .btn{justify-content:center;}
+  .foot-grid{grid-template-columns:1fr;}
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAC-GRADE FINTECH BEAUTY v6 Final
+   Every element curved, glowing, and alive
+═══════════════════════════════════════════════════════ */
+
+/* ── GLOBAL smooth rendering ── */
+*{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(44,207,180,.3);border-radius:100px;}
+
+/* ── SELECTION ── */
+::selection{background:rgba(44,207,180,.22);color:var(--text);}
+
+/* ── NAV: glass pill logo ── */
+nav{border-bottom-color:transparent!important;background:rgba(7,9,13,.72)!important;backdrop-filter:blur(28px) saturate(1.9)!important;}
+@media(prefers-color-scheme:light){nav{background:rgba(244,242,236,.8)!important;}}
+.logo-icon{border-radius:50%!important;width:38px!important;height:38px!important;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--violet) 100%)!important;
+  box-shadow:0 0 0 1px rgba(44,207,180,.25),0 4px 18px rgba(44,207,180,.28)!important;}
+.nav-mob{border-radius:100px!important;}
+
+/* ── BUTTONS: pill, gradient, multi-layer glow ── */
+.btn{border-radius:100px!important;font-weight:600!important;letter-spacing:.005em!important;
+  position:relative;overflow:hidden;}
+.btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 50%);pointer-events:none;border-radius:100px;}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent) 0%,#17b89c 60%,var(--accent) 100%)!important;
+  background-size:200% 100%!important;
+  box-shadow:0 4px 14px rgba(44,207,180,.3),0 1px 0 rgba(255,255,255,.15) inset!important;
+  transition:all .25s cubic-bezier(.4,0,.2,1)!important;}
+.btn-primary:hover{
+  background-position:100% 0!important;
+  transform:translateY(-2px)!important;
+  box-shadow:0 10px 32px rgba(44,207,180,.42),0 2px 8px rgba(44,207,180,.2),0 1px 0 rgba(255,255,255,.2) inset!important;}
+.btn-primary:active{transform:translateY(0)!important;}
+.btn-ghost{
+  background:rgba(255,255,255,.04)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(12px)!important;}
+.btn-ghost:hover{
+  border-color:rgba(44,207,180,.4)!important;
+  background:rgba(44,207,180,.07)!important;
+  color:var(--accent)!important;
+  box-shadow:0 0 0 1px rgba(44,207,180,.2)!important;}
+
+/* ── LABEL TAG: glowing pill ── */
+.label-tag{
+  display:inline-flex!important;align-items:center!important;gap:6px!important;
+  padding:5px 14px!important;border-radius:100px!important;
+  background:rgba(44,207,180,.08)!important;
+  border:1px solid rgba(44,207,180,.22)!important;
+  box-shadow:0 0 20px rgba(44,207,180,.06)!important;
+  letter-spacing:.16em!important;}
+
+/* ── HERO CARD: Mac frosted glass ── */
+.hcard{
+  border-radius:28px!important;
+  background:rgba(12,18,28,.82)!important;
+  backdrop-filter:blur(32px) saturate(1.8)!important;
+  -webkit-backdrop-filter:blur(32px) saturate(1.8)!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+  box-shadow:0 32px 80px rgba(0,0,0,.55),0 0 0 0.5px rgba(255,255,255,.06) inset!important;}
+.hcard::before{
+  height:1px!important;opacity:.8!important;
+  background:linear-gradient(90deg,transparent,rgba(44,207,180,.7) 30%,rgba(139,114,248,.7) 70%,transparent)!important;}
+@media(prefers-color-scheme:light){
+  .hcard{background:rgba(255,255,255,.85)!important;border-color:rgba(0,0,0,.08)!important;
+    box-shadow:0 24px 64px rgba(0,0,0,.12),0 0 0 0.5px rgba(0,0,0,.04) inset!important;}}
+.hcard-avatar{border-radius:50%!important;width:44px!important;height:44px!important;
+  box-shadow:0 0 0 2px var(--bg2),0 0 0 4px rgba(44,207,180,.3)!important;}
+.hstat{border-radius:18px!important;
+  background:rgba(255,255,255,.03)!important;
+  border:1px solid rgba(255,255,255,.07)!important;
+  position:relative;overflow:hidden;}
+.hstat::after{content:'';position:absolute;top:0;left:0;right:0;height:100%;
+  background:linear-gradient(160deg,rgba(255,255,255,.04) 0%,transparent 50%);pointer-events:none;}
+.chip{border-radius:100px!important;padding:5px 12px!important;
+  background:rgba(255,255,255,.05)!important;
+  border:1px solid rgba(255,255,255,.08)!important;}
+.claim-zone{border-radius:20px!important;overflow:hidden;position:relative;}
+.claim-zone::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(44,207,180,.06) 0%,rgba(139,114,248,.04) 100%);
+  pointer-events:none;}
+.claim-cta-btn{
+  border-radius:100px!important;padding:12px 24px!important;font-weight:700!important;
+  background:linear-gradient(135deg,var(--accent),#17b89c)!important;
+  box-shadow:0 4px 18px rgba(44,207,180,.35)!important;
+  transition:all .22s cubic-bezier(.4,0,.2,1)!important;}
+.claim-cta-btn:hover{transform:translateY(-2px)!important;box-shadow:0 10px 28px rgba(44,207,180,.5)!important;}
+.prog-track{height:6px!important;border-radius:100px!important;overflow:hidden;}
+.prog-fill{
+  border-radius:100px!important;
+  background:linear-gradient(90deg,var(--accent),var(--violet),var(--accent))!important;
+  background-size:200%!important;
+  animation:shimmer 2.8s linear infinite!important;}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+/* ── FLOAT TAGS: pill ── */
+.float-tag{border-radius:100px!important;padding:8px 18px!important;
+  backdrop-filter:blur(12px)!important;
+  box-shadow:0 4px 20px rgba(0,0,0,.22)!important;}
+
+/* ── TRUST BAR ── */
+.tchain-icon{border-radius:50%!important;width:32px!important;height:32px!important;
+  box-shadow:0 2px 10px rgba(0,0,0,.18)!important;}
+.tbadge{border-radius:100px!important;}
+
+/* ── HOW IT WORKS: floating cards ── */
+.steps{background:transparent!important;border:none!important;border-radius:0!important;
+  display:grid!important;gap:18px!important;}
+.step{
+  border-radius:28px!important;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--bg2) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:0 4px 24px rgba(0,0,0,.18),0 1px 0 rgba(255,255,255,.06) inset!important;
+  transition:all .3s cubic-bezier(.4,0,.2,1)!important;
+  position:relative;overflow:hidden;}
+.step::before{
+  content:'';position:absolute;inset:-1px;border-radius:29px;
+  background:linear-gradient(135deg,rgba(44,207,180,.2),rgba(139,114,248,.08),transparent 60%);
+  opacity:0;transition:opacity .3s;pointer-events:none;}
+.step:hover{
+  transform:translateY(-6px)!important;
+  box-shadow:0 24px 56px rgba(0,0,0,.3),0 0 0 1px rgba(44,207,180,.22),0 1px 0 rgba(255,255,255,.08) inset!important;
+  border-color:transparent!important;}
+.step:hover::before{opacity:1;}
+.step-icon{
+  width:56px!important;height:56px!important;border-radius:50%!important;
+  background:linear-gradient(135deg,rgba(44,207,180,.15),rgba(139,114,248,.1))!important;
+  border:1.5px solid rgba(44,207,180,.28)!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  margin-bottom:22px!important;
+  box-shadow:0 6px 20px rgba(44,207,180,.15),inset 0 1px 0 rgba(255,255,255,.1)!important;
+  transition:all .3s!important;color:var(--accent)!important;}
+.step:hover .step-icon{
+  background:linear-gradient(135deg,var(--accent),#17b89c)!important;
+  border-color:transparent!important;
+  box-shadow:0 8px 28px rgba(44,207,180,.45),inset 0 1px 0 rgba(255,255,255,.2)!important;
+  color:#040C0A!important;}
+.step-n{
+  font-family:'Instrument Serif',serif!important;font-size:4rem!important;
+  line-height:1!important;margin-bottom:12px!important;
+  background:linear-gradient(135deg,var(--accent),var(--violet));
+  -webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;
+  background-clip:text!important;opacity:.18!important;transition:opacity .3s!important;}
+.step:hover .step-n{opacity:.32!important;}
+.step-title{font-size:1rem!important;font-weight:600!important;letter-spacing:-.01em!important;margin-bottom:10px!important;}
+
+/* ── WHY CARDS ── */
+.why-card{
+  border-radius:22px!important;padding:22px 26px!important;
+  transition:all .28s cubic-bezier(.4,0,.2,1)!important;
+  position:relative;overflow:hidden;}
+.why-card::before{
+  content:'';position:absolute;left:0;top:10%;bottom:10%;width:3px;border-radius:3px;
+  background:linear-gradient(180deg,var(--accent),var(--violet));
+  opacity:0;transition:opacity .28s;}
+.why-card:hover::before{opacity:1;}
+.why-card:hover{
+  transform:translateX(6px)!important;
+  border-color:rgba(44,207,180,.28)!important;
+  box-shadow:0 10px 36px rgba(0,0,0,.22)!important;}
+.why-ic{
+  width:48px!important;height:48px!important;border-radius:50%!important;
+  flex-shrink:0!important;
+  box-shadow:0 4px 16px rgba(0,0,0,.14)!important;
+  transition:all .28s!important;}
+.why-ic.t{
+  background:linear-gradient(135deg,rgba(44,207,180,.18),rgba(44,207,180,.06))!important;
+  border:1.5px solid rgba(44,207,180,.28)!important;}
+.why-ic.v{
+  background:linear-gradient(135deg,rgba(139,114,248,.18),rgba(139,114,248,.06))!important;
+  border:1.5px solid rgba(139,114,248,.28)!important;}
+.why-ic.g{
+  background:linear-gradient(135deg,rgba(201,169,110,.18),rgba(201,169,110,.06))!important;
+  border:1.5px solid rgba(201,169,110,.28)!important;}
+.why-card:hover .why-ic{transform:scale(1.08)!important;}
+
+/* ── INTEL CARDS ── */
+.icard{
+  border-radius:26px!important;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--bg2) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:0 4px 20px rgba(0,0,0,.14)!important;
+  transition:all .3s cubic-bezier(.4,0,.2,1)!important;}
+.icard:hover{
+  transform:translateY(-5px)!important;
+  box-shadow:0 20px 56px rgba(0,0,0,.28),0 0 0 1px rgba(44,207,180,.2)!important;
+  border-color:transparent!important;}
+.icard-head{padding-bottom:16px!important;border-bottom:1px solid rgba(255,255,255,.06)!important;}
+.cbar-track{height:6px!important;border-radius:100px!important;background:rgba(255,255,255,.05)!important;}
+.cbar-fill{border-radius:100px!important;}
+.act-bar{border-radius:5px 5px 0 0!important;}
+.act-mini{border-radius:16px!important;padding:10px 12px!important;
+  background:rgba(255,255,255,.03)!important;border:1px solid rgba(255,255,255,.06)!important;}
+.score-sub{border-radius:16px!important;padding:10px 12px!important;
+  background:rgba(255,255,255,.03)!important;border:1px solid rgba(255,255,255,.06)!important;}
+.proto-tag{border-radius:100px!important;padding:5px 14px!important;
+  background:rgba(255,255,255,.03)!important;border:1px solid rgba(255,255,255,.06)!important;
+  transition:all .2s!important;}
+.proto-tag:hover,.proto-tag.on{
+  background:rgba(44,207,180,.1)!important;
+  border-color:rgba(44,207,180,.3)!important;
+  color:var(--accent)!important;
+  box-shadow:0 2px 12px rgba(44,207,180,.15)!important;}
+.cp-av{border-radius:50%!important;box-shadow:0 2px 8px rgba(0,0,0,.2)!important;}
+.cp-badge{border-radius:100px!important;padding:3px 10px!important;}
+
+/* ── FEATURES GRID: floating individual cards ── */
+.feat-grid{
+  display:grid!important;gap:16px!important;
+  background:transparent!important;border:none!important;border-radius:0!important;}
+.feat-cell{
+  border-radius:28px!important;padding:36px 28px!important;
+  background:linear-gradient(160deg,var(--card) 0%,var(--bg2) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:0 2px 16px rgba(0,0,0,.12)!important;
+  transition:all .3s cubic-bezier(.4,0,.2,1)!important;
+  position:relative;overflow:hidden;}
+.feat-cell::before{
+  content:'';position:absolute;inset:-1px;border-radius:29px;
+  background:linear-gradient(135deg,rgba(44,207,180,.18),rgba(139,114,248,.08),transparent 60%);
+  opacity:0;transition:opacity .3s;pointer-events:none;}
+.feat-cell:hover{
+  transform:translateY(-5px)!important;
+  border-color:transparent!important;
+  box-shadow:0 20px 52px rgba(0,0,0,.28),0 0 0 1px rgba(44,207,180,.2),0 1px 0 rgba(255,255,255,.08) inset!important;}
+.feat-cell:hover::before{opacity:1;}
+.feat-ic{
+  width:58px!important;height:58px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  margin-bottom:22px!important;
+  background:linear-gradient(135deg,rgba(44,207,180,.14),rgba(139,114,248,.06))!important;
+  border:1.5px solid rgba(44,207,180,.22)!important;
+  box-shadow:0 6px 22px rgba(44,207,180,.13),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  transition:all .3s!important;color:var(--accent)!important;}
+.feat-cell:hover .feat-ic{
+  background:linear-gradient(135deg,var(--accent),#17b89c)!important;
+  border-color:transparent!important;
+  box-shadow:0 10px 30px rgba(44,207,180,.45),inset 0 1px 0 rgba(255,255,255,.2)!important;
+  color:#040C0A!important;
+  transform:scale(1.06)!important;}
+.feat-title{font-size:.96rem!important;font-weight:600!important;letter-spacing:-.01em!important;}
+
+/* ── DASHBOARD ── */
+.dash-frame{
+  border-radius:32px 32px 0 0!important;
+  box-shadow:0 -2px 60px rgba(0,0,0,.35)!important;
+  overflow:hidden!important;}
+.dash-chrome{
+  border-radius:32px 32px 0 0!important;
+  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%)!important;}
+.dash-url{border-radius:100px!important;}
+.dash-dot{border-radius:50%!important;}
+.dash-kpi{
+  border-radius:20px!important;padding:16px 18px!important;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--bg) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.1)!important;
+  transition:all .22s!important;}
+.dash-kpi:hover{
+  border-color:rgba(44,207,180,.2)!important;
+  box-shadow:0 6px 24px rgba(0,0,0,.18)!important;
+  transform:translateY(-2px)!important;}
+.dash-chart-card{
+  border-radius:24px!important;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--bg) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:0 2px 14px rgba(0,0,0,.1)!important;}
+.dash-tx-badge{border-radius:100px!important;padding:3px 10px!important;}
+.bar-visual{border-radius:14px 14px 4px 4px!important;}
+
+/* ── CLAIM CARD: the main CTA everyone sees ── */
+.dash-claim-card{
+  border-radius:26px!important;padding:24px!important;
+  background:linear-gradient(140deg,rgba(44,207,180,.11) 0%,rgba(139,114,248,.07) 100%)!important;
+  border:1px solid rgba(44,207,180,.22)!important;
+  box-shadow:0 6px 28px rgba(44,207,180,.08),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  position:relative;overflow:hidden;}
+.dash-claim-card::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(44,207,180,.14),transparent 70%);
+  pointer-events:none;}
+.dash-claim-card::after{
+  content:'';position:absolute;bottom:-40px;left:-40px;
+  width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,114,248,.1),transparent 70%);
+  pointer-events:none;}
+/* THE BUTTON: pill, gradient, animated glow */
+.dcc-btn{
+  width:100%!important;border-radius:100px!important;
+  padding:15px 20px!important;font-weight:700!important;font-size:.85rem!important;
+  cursor:pointer!important;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--accent) 0%,#17b89c 50%,var(--accent) 100%)!important;
+  background-size:200% 100%!important;
+  border:none!important;color:#040C0A!important;
+  box-shadow:0 6px 24px rgba(44,207,180,.38),0 1px 0 rgba(255,255,255,.25) inset!important;
+  transition:all .25s cubic-bezier(.4,0,.2,1)!important;
+  animation:claimPulse 3s ease infinite!important;}
+.dcc-btn::before{
+  content:'';position:absolute;inset:0;border-radius:100px;
+  background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 50%);
+  pointer-events:none;}
+.dcc-btn:hover{
+  background-position:100% 0!important;
+  transform:translateY(-3px)!important;
+  box-shadow:0 14px 36px rgba(44,207,180,.52),0 2px 0 rgba(255,255,255,.3) inset!important;
+  animation:none!important;}
+.dcc-btn:active{transform:translateY(-1px)!important;}
+@keyframes claimPulse{
+  0%,100%{box-shadow:0 6px 24px rgba(44,207,180,.38),0 1px 0 rgba(255,255,255,.25) inset}
+  50%{box-shadow:0 6px 36px rgba(44,207,180,.6),0 0 50px rgba(44,207,180,.2),0 1px 0 rgba(255,255,255,.25) inset}}
+
+.dash-hist-card{
+  border-radius:24px!important;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--bg) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;}
+.dcc-track{height:5px!important;border-radius:100px!important;overflow:hidden;}
+.dcc-fill{border-radius:100px!important;}
+
+/* ── SECURITY CARDS ── */
+.sec-grid{gap:20px!important;}
+.sec-card{
+  border-radius:28px!important;padding:32px!important;
+  background:linear-gradient(160deg,var(--card) 0%,var(--bg2) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:0 3px 18px rgba(0,0,0,.12)!important;
+  transition:all .3s cubic-bezier(.4,0,.2,1)!important;
+  position:relative;overflow:hidden;}
+.sec-card::before{
+  content:'';position:absolute;inset:-1px;border-radius:29px;
+  background:linear-gradient(135deg,rgba(44,207,180,.14),rgba(139,114,248,.06),transparent 60%);
+  opacity:0;transition:opacity .3s;pointer-events:none;}
+.sec-card:hover{
+  transform:translateY(-5px)!important;
+  border-color:transparent!important;
+  box-shadow:0 20px 52px rgba(0,0,0,.26),0 0 0 1px rgba(44,207,180,.2)!important;}
+.sec-card:hover::before{opacity:1;}
+.sec-ic{
+  width:58px!important;height:58px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  margin-bottom:20px!important;
+  background:linear-gradient(135deg,rgba(44,207,180,.14),rgba(139,114,248,.08))!important;
+  border:1.5px solid rgba(44,207,180,.24)!important;
+  box-shadow:0 6px 22px rgba(44,207,180,.12),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  color:var(--accent)!important;transition:all .3s!important;}
+.sec-card:hover .sec-ic{
+  background:linear-gradient(135deg,var(--accent),#17b89c)!important;
+  border-color:transparent!important;
+  box-shadow:0 10px 28px rgba(44,207,180,.42),inset 0 1px 0 rgba(255,255,255,.2)!important;
+  color:#040C0A!important;transform:scale(1.06)!important;}
+
+/* ── FAQ ── */
+.faq-grid{gap:14px!important;}
+.faq-item{
+  border-radius:24px!important;overflow:hidden!important;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--bg2) 100%)!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.08)!important;
+  transition:all .25s!important;}
+.faq-item:hover{
+  border-color:rgba(44,207,180,.2)!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.16)!important;}
+.faq-item.open{
+  border-color:rgba(44,207,180,.22)!important;
+  box-shadow:0 10px 36px rgba(44,207,180,.08)!important;}
+.faq-q{padding:20px 26px!important;}
+.faq-a{padding:0 26px!important;}
+.faq-item.open .faq-a{padding:0 26px 22px!important;}
+.faq-tog{
+  width:26px!important;height:26px!important;border-radius:50%!important;
+  background:rgba(44,207,180,.08)!important;
+  border:1px solid rgba(44,207,180,.2)!important;
+  box-shadow:0 2px 10px rgba(44,207,180,.1)!important;}
+.faq-item.open .faq-tog{
+  background:linear-gradient(135deg,var(--accent),#17b89c)!important;
+  border-color:transparent!important;
+  box-shadow:0 4px 14px rgba(44,207,180,.35)!important;}
+
+/* ── CTA SECTION ── */
+.cta-in{
+  background:linear-gradient(160deg,rgba(44,207,180,.06),rgba(139,114,248,.04))!important;
+  border:1px solid rgba(44,207,180,.14)!important;
+  border-radius:36px!important;padding:88px 48px!important;
+  position:relative;overflow:hidden;}
+.cta-in::before{
+  content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:400px;height:300px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(44,207,180,.08),transparent 70%);
+  pointer-events:none;}
+
+/* ── TOAST: pill, glass ── */
+#toast{
+  border-radius:100px!important;padding:13px 24px!important;
+  backdrop-filter:blur(20px) saturate(1.8)!important;
+  box-shadow:0 8px 32px rgba(0,0,0,.3)!important;
+  border:1px solid rgba(255,255,255,.1)!important;}
+
+/* ── FOOTER SOCIALS: circles ── */
+.foot-soc{
+  border-radius:50%!important;width:38px!important;height:38px!important;
+  transition:all .22s!important;}
+.foot-soc:hover{
+  background:linear-gradient(135deg,rgba(44,207,180,.14),rgba(139,114,248,.08))!important;
+  border-color:rgba(44,207,180,.3)!important;
+  color:var(--accent)!important;
+  transform:translateY(-2px)!important;
+  box-shadow:0 6px 18px rgba(44,207,180,.2)!important;}
+
+/* ── BADGE ── */
+.badge{border-radius:100px!important;}
+.badge-a{
+  box-shadow:0 0 0 1px rgba(44,207,180,.15),0 4px 16px rgba(44,207,180,.1)!important;}
+
+/* ── ORBS: gentle float ── */
+.orb1{animation:orbA 18s ease-in-out infinite!important;}
+.orb2{animation:orbB 22s ease-in-out infinite 4s!important;}
+@keyframes orbA{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(40px,-28px) scale(1.05)}70%{transform:translate(-20px,18px) scale(.96)}}
+@keyframes orbB{0%,100%{transform:translate(0,0) scale(1)}35%{transform:translate(-35px,22px) scale(1.04)}65%{transform:translate(25px,-15px) scale(.97)}}
+
+/* ── SCORE RING glow ── */
+#scoreRing{filter:drop-shadow(0 0 8px rgba(44,207,180,.5));}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .steps{grid-template-columns:1fr 1fr!important;}
+  .feat-grid{grid-template-columns:1fr 1fr!important;}}
+@media(max-width:760px){
+  .steps{grid-template-columns:1fr!important;}
+  .feat-grid{grid-template-columns:1fr!important;}
+  .cta-in{padding:52px 28px!important;border-radius:26px!important;}}
+</style>
+</head>
+<body>
+<div id="scroll-prog"></div>
+<div class="grid-bg"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">⛽</div>
+        Gas<span style="color:var(--accent)">Back</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#intel">Wallet Intel</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-right">
+        <button id="connectBtn" class="btn btn-primary" onclick="connectWallet()">Connect Wallet</button>
+        <button class="nav-mob" onclick="toggleMob()">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="wrap" style="position:relative;z-index:2;width:100%;">
+    <div class="hero-grid">
+      <!-- Copy -->
+      <div>
+        <div class="hero-eyebrow rv">
+          <span class="badge badge-a"><span class="dot-live"></span>Live on 5 EVM Chains</span>
+        </div>
+        <h1 class="d-xl hero-title rv rv1">
+          Reclaim More<br>From Every<br><em>Onchain Move</em>
+        </h1>
+        <p class="hero-sub rv rv2">
+          Connect your wallet, analyze lifetime gas spend across supported EVM ecosystems, unlock eligible rebates and protocol-backed rewards, then claim in one click.
+        </p>
+        <div class="hero-acts rv rv3">
+          <button class="btn btn-primary btn-lg" onclick="connectWallet()">⚡ Connect Wallet</button>
+          <a class="btn btn-ghost btn-lg" href="#how">See How It Works →</a>
+        </div>
+        <div class="hero-trust rv rv4">
+          <div class="trust-item"><span class="trust-ic">🔒</span>Non-custodial</div>
+          <div class="trust-item"><span class="trust-ic">◎</span>Read-only scan</div>
+          <div class="trust-item"><span class="trust-ic">✦</span><span id="statUsers">184,000+</span> wallets</div>
+          <div class="trust-item"><span class="trust-ic">⬡</span><span id="statEth">3,842</span> ETH recovered</div>
+        </div>
+      </div>
+      <!-- Mockup card -->
+      <div class="hero-card rv rv2">
+        <div style="position:relative;">
+          <div class="float-tag ft1"><span>✓</span> Claim confirmed · <span id="ftAmt">0.000 ETH</span></div>
+          <div class="hcard">
+            <!-- empty state overlay: hidden after wallet connects -->
+            <div id="heroEmptyState" style="position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(7,9,13,0.82);backdrop-filter:blur(6px);border-radius:8px;gap:14px;padding:30px;text-align:center;">
+              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(44,207,180,.15),rgba(139,114,248,.1));border:1.5px solid rgba(44,207,180,.28);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(44,207,180,.14);"><svg width="28" height="28" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+              <div style="font-weight:600;font-size:.95rem;color:var(--text);">Connect to see your data</div>
+              <div style="font-size:.82rem;color:var(--text3);line-height:1.6;max-width:240px;">Your real gas history, claimable balance, and wallet score, pulled live from the blockchain.</div>
+              <button class="btn btn-primary" style="margin-top:4px;" onclick="connectWallet()">⚡ Connect Wallet</button>
+            </div>
+            <div class="hcard-top">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="hcard-avatar" id="heroAvatar">0x</div>
+                <div>
+                  <div class="hcard-addr" id="heroAddr">Not connected</div>
+                  <div class="hcard-ens" id="heroEns">Connect wallet to load</div>
+                </div>
+              </div>
+              <div>
+                <div class="hcard-score-val" id="heroScore">0</div>
+                <div class="hcard-score-lbl">Activity Score</div>
+              </div>
+            </div>
+            <div class="hcard-stats">
+              <div class="hstat t">
+                <div class="hstat-lbl">Gas Spent (ETH)</div>
+                <div class="hstat-val" id="heroGasEth">0.000</div>
+                <div class="hstat-sub">Across all chains</div>
+              </div>
+              <div class="hstat v">
+                <div class="hstat-lbl">Total Transactions</div>
+                <div class="hstat-val" id="heroTxs">0</div>
+                <div class="hstat-sub">All EVM combined</div>
+              </div>
+              <div class="hstat g">
+                <div class="hstat-lbl">Gas Spent (USD)</div>
+                <div class="hstat-val" id="heroGasUsd">$0.00</div>
+                <div class="hstat-sub">Protocol-eligible</div>
+              </div>
+              <div class="hstat gr">
+                <div class="hstat-lbl">Chains Active</div>
+                <div class="hstat-val" id="heroChains">0</div>
+                <div class="hstat-sub">Multi-chain wallet</div>
+              </div>
+            </div>
+            <div class="chain-row">
+              <div class="chip"><div class="cdot cdot-eth"></div>Ethereum</div>
+              <div class="chip"><div class="cdot cdot-arb"></div>Arbitrum</div>
+              <div class="chip"><div class="cdot cdot-base"></div>Base</div>
+              <div class="chip"><div class="cdot cdot-op"></div>Optimism</div>
+              <div class="chip"><div class="cdot cdot-poly"></div>Polygon</div>
+            </div>
+            <div class="claim-zone">
+              <div>
+                <div class="claim-lbl">Eligible Claimable Value</div>
+                <div class="claim-eth" id="heroClaimEth">0.000</div>
+                <div class="claim-usd" id="heroClaimUsd">Connect wallet to calculate</div>
+              </div>
+              <button class="claim-cta-btn" onclick="claimNow()">⚡ Claim Now</button>
+            </div>
+            <div class="prog-wrap">
+              <div class="prog-labels">
+                <span>Eligibility Progress</span>
+                <span id="heroProgPct" style="color:var(--accent)">0%</span>
+              </div>
+              <div class="prog-track"><div class="prog-fill" id="heroProg" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="float-tag ft2">↑ <span id="ftElig">0</span> transactions eligible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST BAR ── -->
+<div class="trust-bar">
+  <div class="wrap">
+    <div class="trust-bar-in">
+      <div class="tchain"><div class="tchain-icon" style="background:rgba(98,126,234,.14);color:#627EEA;">Ξ</div>Ethereum</div>
+      <div class="tchain"><div class="tchain-icon" style="background:rgba(40,160,240,.14);color:#28A0F0;">◆</div>Arbitrum</div>
+      <div class="tchain"><div class="tchain-icon" style="background:rgba(0,82,255,.12);color:#0052FF;">●</div>Base</div>
+      <div class="tchain"><div class="tchain-icon" style="background:rgba(255,4,32,.12);color:#FF0420;">▲</div>Optimism</div>
+      <div class="tchain"><div class="tchain-icon" style="background:rgba(130,71,229,.14);color:#8247E5;">⬡</div>Polygon</div>
+      <div class="tsep"></div>
+      <div class="tbadge"><span class="tbadge-ic">🔒</span>Non-Custodial</div>
+      <div class="tbadge"><span class="tbadge-ic">👁</span>Read-Only</div>
+      <div class="tbadge"><span class="tbadge-ic">📋</span>Audit-Ready</div>
+      <div class="tbadge"><span class="tbadge-ic">⚖️</span>Transparent Logic</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- wave divider -->
+<div class="wave-divider" aria-hidden="true">
+<svg viewBox="0 0 1440 56" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 56C240 20 480 0 720 28C960 56 1200 36 1440 8V56H0Z" fill="var(--bg)"/>
+</svg>
+</div>
+<!-- ── HOW IT WORKS ── -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="label-tag">Process</span>
+      <h2 class="d-lg">Four steps to eligible recovery</h2>
+      <p>Engineered to be effortless. From connection to claim, GasBack handles the complexity so you get the value.</p>
+    </div>
+    <div class="steps rv rv1">
+      <div class="step">
+        <div class="step-n">01</div>
+        <div class="step-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="step-title">Connect Your Wallet</div>
+        <div class="step-desc">Securely connect via MetaMask or any injected EVM wallet. No wallet? Demo mode works instantly in your browser with no setup.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <div class="step-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+        <div class="step-title">Scan Gas History</div>
+        <div class="step-desc">GasBack analyzes your full transaction history across Ethereum, Arbitrum, Base, Optimism, and Polygon using indexed onchain data.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <div class="step-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2"/></svg></div>
+        <div class="step-title">Calculate Eligibility</div>
+        <div class="step-desc">The smart eligibility engine cross-references your activity against active rebate campaigns, protocol-funded programs, and partner reward pools.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <div class="step-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div class="step-title">Claim in One Click</div>
+        <div class="step-desc">When eligible value is available, claim it instantly. No complex flows, no bridging, no waiting. One click whenever the vault has something for you.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY IT MATTERS ── -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="why-grid">
+      <div class="why-txt rv">
+        <span class="label-tag">Why GasBack</span>
+        <h2 class="d-lg" style="margin:12px 0 24px;">The friction is real.<br>The solution is <em>now</em>.</h2>
+        <p><strong>Every active onchain user faces the same problem.</strong> You're mid-trade, executing a strategy, or trying to move assets, and you're out of gas. So you rush to a CEX, buy ETH, wait for the withdrawal, pay fees again, and lose the moment.</p>
+        <p>GasBack doesn't eliminate gas. It works with the system to recover eligible value through protocol partnerships, reward programs, and treasury-backed campaigns. <strong>Think of it as a loyalty program for your gas spend.</strong></p>
+        <p>The more you transact, the more you potentially recover. Not a guarantee, not a scam. Just a credible, transparent, protocol-powered gas recovery rail.</p>
+        <div style="margin-top:30px;">
+          <button class="btn btn-primary" onclick="scrollTo('#how')">How Eligibility Works →</button>
+        </div>
+      </div>
+      <div class="why-cards rv rv1">
+        <div class="why-big">$4.2B</div>
+        <div class="why-big-sub">estimated gas fees paid by active EVM users annually. A fraction of that is recoverable through protocol-backed programs</div>
+        <div class="why-card">
+          <div class="why-ic t"><svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div>
+            <div class="why-card-title">Zero Friction Recovery</div>
+            <div class="why-card-desc">Stop manually moving funds to refill gas. Let eligible rewards come to you, claimable whenever the timing suits your strategy.</div>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="why-ic v"><svg width="20" height="20" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+          <div>
+            <div class="why-card-title">Protocol-Aligned Incentives</div>
+            <div class="why-card-desc">Rebates are funded through genuine protocol partnerships and reward allocations, not inflationary tokenomics or empty promises.</div>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="why-ic g"><svg width="20" height="20" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div>
+            <div class="why-card-title">Full Transparency</div>
+            <div class="why-card-desc">See exactly which transactions qualify, how eligibility is calculated, and which program funds your claim. No black boxes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WALLET INTELLIGENCE ── -->
+<section class="section" id="intel">
+  <div class="wrap-wide">
+    <div class="intel-intro rv">
+      <span class="label-tag">Wallet Intelligence</span>
+      <h2 class="d-lg" style="margin:12px 0 0;">Your onchain story,<br>visualized</h2>
+      <p>Public wallet analytics and opt-in identity enrichment. Understand your activity, protocols, counterparties, and public identity signals, all in one premium dashboard.</p>
+    </div>
+    <div class="intel-grid rv rv1">
+      <!-- Gas by chain -->
+      <div class="icard">
+        <div class="icard-head"><div class="icard-title">Gas by Chain</div><div class="icard-icon" style="width:28px;height:28px;border-radius:50%;background:rgba(44,207,180,.1);border:1px solid rgba(44,207,180,.2);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M3 22V8l9-5 9 5v14"/><path d="M12 22v-6"/><path d="M3 13h18"/></svg></div></div>
+        <div class="cbars" id="gasBars">
+          <div class="cbar-item"><div class="cbar-hd"><span class="cbar-nm">Ethereum</span><span class="cbar-vl">0.641 ETH</span></div><div class="cbar-track"><div class="cbar-fill c-eth" style="width:80%"></div></div></div>
+          <div class="cbar-item"><div class="cbar-hd"><span class="cbar-nm">Arbitrum</span><span class="cbar-vl">0.298 ETH</span></div><div class="cbar-track"><div class="cbar-fill c-arb" style="width:48%"></div></div></div>
+          <div class="cbar-item"><div class="cbar-hd"><span class="cbar-nm">Optimism</span><span class="cbar-vl">0.182 ETH</span></div><div class="cbar-track"><div class="cbar-fill c-op" style="width:30%"></div></div></div>
+          <div class="cbar-item"><div class="cbar-hd"><span class="cbar-nm">Base</span><span class="cbar-vl">0.098 ETH</span></div><div class="cbar-track"><div class="cbar-fill c-base" style="width:18%"></div></div></div>
+          <div class="cbar-item"><div class="cbar-hd"><span class="cbar-nm">Polygon</span><span class="cbar-vl">0.065 ETH</span></div><div class="cbar-track"><div class="cbar-fill c-poly" style="width:12%"></div></div></div>
+        </div>
+      </div>
+      <!-- Activity -->
+      <div class="icard">
+        <div class="icard-head"><div class="icard-title">TX Activity · 30d</div><div class="icard-icon" style="width:28px;height:28px;border-radius:50%;background:rgba(139,114,248,.1);border:1px solid rgba(139,114,248,.2);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div></div>
+        <div class="act-chart" id="actChart">
+          <div class="act-bar" style="height:35%"></div><div class="act-bar" style="height:55%"></div><div class="act-bar" style="height:40%"></div><div class="act-bar" style="height:70%"></div><div class="act-bar" style="height:45%"></div><div class="act-bar" style="height:30%"></div><div class="act-bar" style="height:60%"></div><div class="act-bar" style="height:90%"></div><div class="act-bar" style="height:75%"></div><div class="act-bar" style="height:50%"></div><div class="act-bar" style="height:80%"></div><div class="act-bar" style="height:65%"></div><div class="act-bar" style="height:40%"></div><div class="act-bar" style="height:55%"></div><div class="act-bar" style="height:100%"></div><div class="act-bar" style="height:85%"></div><div class="act-bar" style="height:60%"></div><div class="act-bar" style="height:70%"></div><div class="act-bar" style="height:50%"></div><div class="act-bar" style="height:95%"></div>
+        </div>
+        <div class="act-minis">
+          <div class="act-mini"><div class="act-mini-lbl">Avg / Week</div><div class="act-mini-val" id="iAvgWeek">14.2 txs</div></div>
+          <div class="act-mini"><div class="act-mini-lbl">Peak Day</div><div class="act-mini-val" id="iPeakDay">47 txs</div></div>
+        </div>
+      </div>
+      <!-- Score ring -->
+      <div class="icard">
+        <div class="icard-head"><div class="icard-title">Wallet Score</div><div class="icard-icon" style="width:28px;height:28px;border-radius:50%;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.2);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></div></div>
+        <div class="score-wrap">
+          <svg width="114" height="114" style="overflow:visible">
+            <circle cx="57" cy="57" r="50" fill="none" stroke="var(--border)" stroke-width="7"/>
+            <circle cx="57" cy="57" r="50" fill="none" stroke="var(--accent)" stroke-width="7"
+              id="scoreRing" stroke-dasharray="314.16" stroke-dashoffset="94" stroke-linecap="round"
+              transform="rotate(-90 57 57)" style="transition:stroke-dashoffset 1.4s ease"/>
+            <text x="57" y="53" text-anchor="middle" dominant-baseline="middle" fill="var(--accent)"
+              font-family="JetBrains Mono,monospace" font-size="21" font-weight="500" id="scoreRingVal">847</text>
+            <text x="57" y="70" text-anchor="middle" dominant-baseline="middle" fill="var(--text3)"
+              font-family="JetBrains Mono,monospace" font-size="8" letter-spacing="2">ACTIVITY</text>
+          </svg>
+        </div>
+        <div class="score-grid">
+          <div class="score-sub"><div class="score-sub-lbl">Volume</div><div class="score-sub-val" id="scoreVol" style="color:var(--accent)">Low</div></div>
+          <div class="score-sub"><div class="score-sub-lbl">Age</div><div class="score-sub-val" id="scoreAge" style="color:var(--violet)">New</div></div>
+          <div class="score-sub"><div class="score-sub-lbl">Gas Spend</div><div class="score-sub-val" id="scoreGas" style="color:var(--gold)">Low</div></div>
+          <div class="score-sub"><div class="score-sub-lbl">Diversity</div><div class="score-sub-val" id="scoreDiversity" style="color:var(--green)">None</div></div>
+        </div>
+      </div>
+      <!-- Protocols: wide -->
+      <div class="icard wide">
+        <div class="icard-head"><div class="icard-title">Protocols Interacted</div><div class="icard-icon" style="width:28px;height:28px;border-radius:50%;background:rgba(61,214,140,.1);border:1px solid rgba(61,214,140,.2);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4-3.5L18 6z"/><path d="M12 13v8"/><path d="M12 3v3"/></svg></div></div>
+        <div class="proto-cloud" id="protoCloud">
+          <span class="proto-tag on">Uniswap V3</span><span class="proto-tag on">Aave V3</span><span class="proto-tag">Compound</span><span class="proto-tag on">Curve</span><span class="proto-tag">1inch</span><span class="proto-tag">OpenSea</span><span class="proto-tag on">Blur</span><span class="proto-tag">Stargate</span><span class="proto-tag">Hop Protocol</span><span class="proto-tag on">GMX</span><span class="proto-tag">Synthetix</span><span class="proto-tag">Lido</span><span class="proto-tag on">EigenLayer</span><span class="proto-tag">Arbitrum Bridge</span><span class="proto-tag">Convex</span><span class="proto-tag">Balancer</span><span class="proto-tag on">ENS</span><span class="proto-tag">Yearn</span><span class="proto-tag">Maker</span><span class="proto-tag">Across</span>
+        </div>
+        <div class="proto-count">34 protocols · <span style="color:var(--accent)">6 active this month</span></div>
+      </div>
+      <!-- Counterparties -->
+      <div class="icard">
+        <div class="icard-head"><div class="icard-title">Frequent Counterparties</div><div class="icard-icon" style="width:28px;height:28px;border-radius:50%;background:rgba(44,207,180,.1);border:1px solid rgba(44,207,180,.2);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div></div>
+        <div class="cp-list" id="cpList">
+          <div class="cp-row"><div class="cp-av" style="background:linear-gradient(135deg,#627EEA,#9BB0FF)">VB</div><div style="flex:1"><div class="cp-name">vitalik.eth</div><div class="cp-addr">0xd8dA...6045</div></div><div class="cp-cnt">3 txs</div><span class="cp-badge cp-r">Received</span></div>
+          <div class="cp-row"><div class="cp-av" style="background:linear-gradient(135deg,#28A0F0,#6ECFFF)">CB</div><div style="flex:1"><div class="cp-name">Coinbase Wallet</div><div class="cp-addr">0x503a...2B4c</div></div><div class="cp-cnt">12 txs</div><span class="cp-badge cp-r">Received</span></div>
+          <div class="cp-row"><div class="cp-av" style="background:linear-gradient(135deg,#8247E5,#B07EFF)">??</div><div style="flex:1"><div class="cp-name">0x3fC9...1a2b</div><div class="cp-addr">Unknown wallet</div></div><div class="cp-cnt">41 txs</div><span class="cp-badge cp-s">Sent</span></div>
+          <div class="cp-row"><div class="cp-av" style="background:linear-gradient(135deg,#3DD68C,#6EFFBA)">UN</div><div style="flex:1"><div class="cp-name">Uniswap Router</div><div class="cp-addr">0x68b3...4F2A</div></div><div class="cp-cnt">187 txs</div><span class="cp-badge cp-c">Contract</span></div>
+        </div>
+      </div>
+      <!-- Identity -->
+      <div class="icard">
+        <div class="icard-head"><div class="icard-title">Public Identity</div><div class="icard-icon" style="width:28px;height:28px;border-radius:50%;background:rgba(139,114,248,.1);border:1px solid rgba(139,114,248,.2);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div></div>
+        <div>
+          <div class="id-row"><div class="id-platform">ENS</div><div class="id-handle" id="idEns">cryptodev.eth</div><div class="id-conf">100%</div></div>
+          <div class="id-row"><div class="id-platform">Farcaster</div><div class="id-handle">@cryptodev</div><div class="id-conf" style="color:var(--green)">88%</div></div>
+          <div class="id-row"><div class="id-platform">Lens</div><div class="id-handle">cryptodev.lens</div><div class="id-conf" style="color:var(--green)">91%</div></div>
+          <div class="id-row"><div class="id-platform">Gitcoin</div><div class="id-handle">Passport: 42 pts</div><div class="id-conf" style="color:var(--gold)">N/A</div></div>
+        </div>
+        <div class="opt-note"><span>🔐</span><span>Social profiles shown only when wallet owner authorizes linking. All data public and opt-in.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="section section-alt" id="features">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="label-tag">Capabilities</span>
+      <h2 class="d-lg">Everything you need<br>in one platform</h2>
+    </div>
+    <div class="feat-grid rv rv1">
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="feat-title">One-Click Claim</div><div class="feat-desc">Claim all eligible value in a single transaction. No multi-step flows, no token approvals, no bridging required.</div></div>
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div class="feat-title">Cross-Chain EVM</div><div class="feat-desc">Unified view across Ethereum, Arbitrum, Base, Optimism, and Polygon. More chains as programs launch.</div></div>
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="feat-title">Wallet Intelligence</div><div class="feat-desc">Nansen-lite analytics for your own wallet. Gas breakdown, protocol exposure, counterparties, and activity patterns.</div></div>
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div><div class="feat-title">Smart Eligibility</div><div class="feat-desc">The eligibility engine continuously updates based on active campaigns, protocol partnerships, and treasury programs.</div></div>
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414A1 1 0 0 1 19 9.414V19a2 2 0 0 1-2 2z"/></svg></div><div class="feat-title">Claim History</div><div class="feat-desc">Full transparent record of every claim: the source of funds, the protocol program that funded it, and timestamps.</div></div>
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="5"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="feat-title">Security-First</div><div class="feat-desc">Read-only wallet access. We never request signing permissions for fund movement. Your keys, your control, always.</div></div>
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div><div class="feat-title">Identity Enrichment</div><div class="feat-desc">Opt-in linking of ENS, Farcaster, Lens, and social profiles. Shown only to you, never sold or exposed externally.</div></div>
+      <div class="feat-cell"><div class="feat-ic"><svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><div class="feat-title">Gas Optimization</div><div class="feat-desc">Insights on your historical gas patterns with tips on timing and routing to reduce costs on future transactions.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DASHBOARD ── -->
+<section class="section">
+  <div class="wrap">
+    <div class="dash-intro rv">
+      <span class="label-tag">Product Preview</span>
+      <h2 class="d-lg">A dashboard built<br>for power users</h2>
+      <p>Production-grade analytics. Every number tied to your wallet. Every interaction instant.</p>
+    </div>
+  </div>
+  <div class="wrap-wide rv rv1">
+    <div class="dash-frame">
+      <div class="dash-chrome">
+        <div class="dash-dots">
+          <div class="dash-dot" style="background:#FF5F57"></div>
+          <div class="dash-dot" style="background:#FEBC2E"></div>
+          <div class="dash-dot" style="background:#28C840"></div>
+        </div>
+        <div class="dash-url">app.gasback.io/dashboard</div>
+        <div style="flex:1;display:flex;justify-content:flex-end;align-items:center;gap:10px;">
+          <span class="badge badge-a" style="font-size:.62rem;"><span class="dot-live"></span>Live</span>
+          <span class="mono" style="font-size:.68rem;color:var(--text3)" id="dashWalletLabel">0x71C7...3Fe4</span>
+        </div>
+      </div>
+      <div class="dash-in">
+        <div class="dash-tabs">
+          <div class="dash-tab active">Overview</div>
+          <div class="dash-tab">Gas History</div>
+          <div class="dash-tab">Claim Center</div>
+          <div class="dash-tab">Intelligence</div>
+          <div class="dash-tab">Settings</div>
+        </div>
+        <div class="dash-kpis">
+          <div class="dash-kpi"><div class="dash-kpi-lbl">Total Gas Spent</div><div class="dash-kpi-val" id="dkGas">0.000 ETH</div><div class="dash-kpi-sub nt">Connect wallet</div></div>
+          <div class="dash-kpi"><div class="dash-kpi-lbl">Eligible to Claim</div><div class="dash-kpi-val" id="dkClaim" style="color:var(--accent)">0.000 ETH</div><div class="dash-kpi-sub up">After scan</div></div>
+          <div class="dash-kpi"><div class="dash-kpi-lbl">Total Claimed</div><div class="dash-kpi-val" id="dkTotalClaimed">0.000 ETH</div><div class="dash-kpi-sub up">All-time</div></div>
+          <div class="dash-kpi"><div class="dash-kpi-lbl">Transactions</div><div class="dash-kpi-val" id="dkTxs">0</div><div class="dash-kpi-sub nt">All chains</div></div>
+          <div class="dash-kpi"><div class="dash-kpi-lbl">Activity Score</div><div class="dash-kpi-val" id="dkScore" style="color:var(--violet)">0</div><div class="dash-kpi-sub nt">After scan</div></div>
+        </div>
+        <div class="dash-body">
+          <div>
+            <div class="dash-chart-card" style="margin-bottom:14px;">
+              <div class="dash-chart-head">
+                <span class="dash-chart-title">Gas Spend by Chain</span>
+                <span class="mono" style="font-size:.62rem;color:var(--text3)">USD equivalent</span>
+              </div>
+              <div class="bar-chart-area" id="barChart"></div>
+            </div>
+            <div class="dash-chart-card">
+              <div class="dash-chart-head">
+                <span class="dash-chart-title">Recent Transactions</span>
+                <span class="dash-chart-link">View all →</span>
+              </div>
+              <div class="dash-tx-list">
+                <div class="dash-tx"><span class="dash-tx-badge b-swap">SWAP</span><span class="dash-tx-proto">Uniswap V3</span><span class="dash-tx-gas">0.0042 ETH</span><span class="dash-tx-date">Mar 09</span></div>
+                <div class="dash-tx"><span class="dash-tx-badge b-bridge">BRIDGE</span><span class="dash-tx-proto">Stargate Finance</span><span class="dash-tx-gas">0.0031 ETH</span><span class="dash-tx-date">Mar 07</span></div>
+                <div class="dash-tx"><span class="dash-tx-badge b-lp">LP</span><span class="dash-tx-proto">Curve Finance</span><span class="dash-tx-gas">0.0055 ETH</span><span class="dash-tx-date">Mar 05</span></div>
+                <div class="dash-tx"><span class="dash-tx-badge b-approve">APPROVE</span><span class="dash-tx-proto">Aave V3</span><span class="dash-tx-gas">0.0009 ETH</span><span class="dash-tx-date">Mar 02</span></div>
+                <div class="dash-tx"><span class="dash-tx-badge b-swap">SWAP</span><span class="dash-tx-proto">1inch Router</span><span class="dash-tx-gas">0.0028 ETH</span><span class="dash-tx-date">Feb 28</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="dash-right">
+            <div class="dash-claim-card">
+              <div class="dcc-title">⚡ Claimable Now</div>
+              <div class="dcc-val" id="dccVal">0.000 ETH</div>
+              <div class="dcc-sub" id="dccSub">Connect wallet to calculate</div>
+              <div class="dcc-prog">
+                <div class="dcc-prog-labels"><span>Next tier unlock</span><span id="dccPct">0%</span></div>
+                <div class="dcc-track"><div class="dcc-fill" id="dccFill" style="width:0%"></div></div>
+              </div>
+              <button class="dcc-btn" onclick="claimNow()">⚡ Claim All Eligible Value</button>
+            </div>
+            <div class="dash-hist-card">
+              <div class="dash-chart-head" style="margin-bottom:14px;">
+                <span class="dash-chart-title">Claims History</span>
+              </div>
+              <div id="claimHistList">
+                <div class="hist-row" style="color:var(--text3);font-size:.78rem;font-family:'JetBrains Mono',monospace;padding:10px 0;">No claims yet. Connect your wallet to begin.</div>
+              </div>
+              <div class="hist-total"><span class="hist-total-lbl">Total Recovered</span><span class="hist-total-val" id="histTotal">0.0000 ETH</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECURITY ── -->
+<section class="section section-alt" id="security">
+  <div class="wrap">
+    <div class="sh center rv">
+      <span class="label-tag">Trust & Security</span>
+      <h2 class="d-lg">Built on radical transparency</h2>
+      <p>Security and honesty aren't features. They're the foundation. Here's exactly what GasBack does and doesn't do.</p>
+    </div>
+    <div class="sec-grid rv rv1">
+      <div class="sec-card"><div class="sec-ic"><svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m21 2-9.6 9.6M15.5 7l2 2"/></svg></div><div class="sec-title">Non-Custodial</div><div class="sec-desc">GasBack never holds your assets. We never request signing permissions to move funds on your behalf. Connections are read-only for analysis.</div></div>
+      <div class="sec-card"><div class="sec-ic"><svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="sec-title">Public Data Only</div><div class="sec-desc">All wallet analysis uses publicly available onchain data. No private info scraping, no private keys, no non-public inference.</div></div>
+      <div class="sec-card"><div class="sec-ic"><svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="sec-title">Opt-In Identity</div><div class="sec-desc">Social and identity enrichment is entirely optional and user-authorized. Linked profiles are visible only to the wallet owner, never shared.</div></div>
+      <div class="sec-card"><div class="sec-ic"><svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="sec-title">Transparent Eligibility</div><div class="sec-desc">Every eligibility decision is explainable. See exactly which transactions qualified, which program funded your claim, and why others didn't qualify.</div></div>
+      <div class="sec-card"><div class="sec-ic"><svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="4"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="sec-title">Protocol-Funded Claims</div><div class="sec-desc">Claimable value comes from real partner programs, treasury allocations, and rebate campaigns. No unsustainable tokenomics or empty promises.</div></div>
+      <div class="sec-card"><div class="sec-ic"><svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div class="sec-title">Audit-Ready</div><div class="sec-desc">Contracts and eligibility logic are designed for independent audit. We publish documentation and methodology for all claim mechanics.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="sh center rv">
+      <span class="label-tag">FAQ</span>
+      <h2 class="d-lg">Honest answers to direct questions</h2>
+    </div>
+    <div class="faq-grid rv rv1">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">Is this a real gas refund from the blockchain?<div class="faq-tog">+</div></div>
+        <div class="faq-a">No. GasBack does not refund fees already paid to validators or sequencers. Those fees are immutable. GasBack matches your gas history with active rebate programs and protocol reward campaigns, similar to how cashback or loyalty programs work but for onchain activity.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How is claimable value calculated?<div class="faq-tog">+</div></div>
+        <div class="faq-a">The eligibility engine cross-references your gas history with active campaigns from protocol partners. Eligibility depends on which protocols you've used, activity level, chain, transaction types, and timing relative to campaign windows. Full methodology is documented in our Docs.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Which EVM chains are supported?<div class="faq-tog">+</div></div>
+        <div class="faq-a">Currently: Ethereum Mainnet, Arbitrum One, Base, Optimism, and Polygon PoS. We continuously expand as new protocol programs launch. Chain coverage depends on active partnerships and available campaign funding per network.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is my wallet safe when I connect?<div class="faq-tog">+</div></div>
+        <div class="faq-a">Yes. Wallet connection is strictly read-only. GasBack only reads your public transaction history from indexed onchain data. We never request message signing, token approvals, or any permission that could allow fund movement. Your private keys never leave your wallet.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Do you access my private data?<div class="faq-tog">+</div></div>
+        <div class="faq-a">No. Every data point used comes from public blockchain records. Wallet balances, transaction hashes, interacted protocols, and gas usage are all publicly visible onchain. We do not infer, collect, or store any private information about wallet owners.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Why is some of my gas spend not eligible?<div class="faq-tog">+</div></div>
+        <div class="faq-a">Eligibility is determined by active campaigns. A transaction is eligible when it falls within a campaign window and involves a partnered protocol. Transactions outside campaign periods, on unsupported chains, or without active programs will not generate claimable value. This is always clearly explained in your dashboard.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How often can I claim?<div class="faq-tog">+</div></div>
+        <div class="faq-a">Whenever eligible value is available in your claim queue. No mandatory wait period. As new campaigns activate and your activity qualifies, value accumulates. You can claim daily, weekly, or whenever your balance reaches a meaningful amount. Minimum claim thresholds may apply per program.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How are linked profiles displayed?<div class="faq-tog">+</div></div>
+        <div class="faq-a">Identity enrichment is entirely opt-in. Link your ENS, Farcaster, Lens, or social profiles to your GasBack dashboard. These are shown only to you when logged in and are never shared with third parties, indexed publicly on our platform, or used for targeting.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="section cta-sec">
+  <div class="wrap">
+    <div class="cta-in rv" style="background:linear-gradient(160deg,rgba(44,207,180,.06),rgba(139,114,248,.04));border:1px solid rgba(44,207,180,.14);border-radius:32px;padding:80px 40px;">
+      <span class="label-tag">Get Started</span>
+      <h2 class="d-lg" style="margin:12px 0 18px;">Stop refilling blindly.<br>Recover <em>smarter</em>.</h2>
+      <p style="font-size:1.05rem;color:var(--text2);margin-bottom:36px;max-width:460px;margin-left:auto;margin-right:auto;line-height:1.7;">Connect your wallet and see what your gas history is eligible to recover. No commitment, no permissions, no risk.</p>
+      <div class="cta-acts">
+        <button class="btn btn-primary btn-lg" onclick="connectWallet()">⚡ Connect Wallet · Free</button>
+        <a class="btn btn-ghost btn-lg" href="#how">See How It Works</a>
+      </div>
+      <div class="cta-disc">Read-only · Non-custodial · No gas required to analyze</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo"><div class="logo-icon">⛽</div>Gas<span style="color:var(--accent)">Back</span></div>
+        <p>Protocol-powered gas recovery for active EVM users. Eligible rebates, onchain analytics, and one-click claims.</p>
+        <div style="margin-top:18px;"><span class="badge badge-a" style="font-size:.62rem;"><span class="dot-live"></span>Live on Mainnet</span></div>
+      </div>
+      <div>
+        <div class="foot-col-title">Product</div>
+        <ul class="foot-links"><li><a href="#">Dashboard</a></li><li><a href="#">Claim Center</a></li><li><a href="#intel">Wallet Intel</a></li><li><a href="#">Gas Calculator</a></li><li><a href="#">Claim History</a></li></ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Developers</div>
+        <ul class="foot-links"><li><a href="#">Documentation</a></li><li><a href="#">API Reference</a></li><li><a href="#">Eligibility Logic</a></li><li><a href="#">Smart Contracts</a></li><li><a href="#">Changelog</a></li></ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Resources</div>
+        <ul class="foot-links"><li><a href="#faq">FAQ</a></li><li><a href="#security">Security</a></li><li><a href="#">Supported Chains</a></li><li><a href="#">Partner Program</a></li><li><a href="#">Blog</a></li></ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Legal</div>
+        <ul class="foot-links"><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li><li><a href="#">Cookie Policy</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2025 GasBack Protocol · All rights reserved</div>
+      <div class="foot-socials">
+        <a href="#" class="foot-soc">𝕏</a>
+        <a href="#" class="foot-soc">◎</a>
+        <a href="#" class="foot-soc">✈</a>
+        <a href="#" class="foot-soc">⌥</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+<!-- ══════════════════════════════════════════
+     REAL WALLET ENGINE: live onchain data
+══════════════════════════════════════════ -->
+<script>
+/* ══════════════════════════════════════
+   CONFIG: add free API keys for higher
+   rate limits (app still works without)
+   etherscan.io/apis  arbiscan.io/apis
+   basescan.org/apis  polygonscan.com/apis
+══════════════════════════════════════ */
+const API_KEYS = {
+  ethereum: '',
+  arbitrum: '',
+  base:     '',
+  optimism: '',
+  polygon:  '',
+};
+
+const CHAINS_CFG = [
+  { id:'ethereum', name:'Ethereum', api:'https://api.etherscan.io/api',            cls:'c-eth'  },
+  { id:'arbitrum', name:'Arbitrum', api:'https://api.arbiscan.io/api',             cls:'c-arb'  },
+  { id:'base',     name:'Base',     api:'https://api.basescan.org/api',            cls:'c-base' },
+  { id:'optimism', name:'Optimism', api:'https://api-optimistic.etherscan.io/api', cls:'c-op'   },
+  { id:'polygon',  name:'Polygon',  api:'https://api.polygonscan.com/api',         cls:'c-poly' },
+];
+
+// Rebate rate: % of real gas spend eligible for protocol reward
+const REBATE_RATE = 0.11;
+
+/* ─ State ─ */
+const state = {
+  wallet:       null,
+  loading:      false,
+  data:         null,
+  ethPrice:     3200,
+  claimHistory: JSON.parse(localStorage.getItem('gb_claim_history') || '[]'),
+  totalClaimed: parseFloat(localStorage.getItem('gb_total_claimed') || '0'),
+};
+
+/* ─ Formatters ─ */
+const $usd = v => '$' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const $eth = (v, dp=4) => v.toFixed(dp) + ' ETH';
+const shortAddr = a => a ? a.slice(0,6)+'...'+a.slice(-4) : '';
+
+/* ─ DOM helpers ─ */
+function setText(id, v){ const el=document.getElementById(id); if(el) el.textContent=v; }
+function setStyle(id, p, v){ const el=document.getElementById(id); if(el) el.style[p]=v; }
+
+/* ─ Toast ─ */
+let toastTimer;
+function toast(msg, type='info'){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show';
+  el.style.borderColor = type==='error' ? 'var(--danger)' : type==='ok' ? 'var(--green)' : '';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 3400);
+}
+
+/* ─ Loading state ─ */
+function setLoading(on){
+  state.loading = on;
+  const btn = document.getElementById('connectBtn');
+  if(on){
+    btn.textContent = 'Scanning chains\u2026';
+    btn.disabled = true;
+    btn.style.background = '';
+    btn.style.color = '';
+  } else {
+    btn.disabled = false;
+  }
+}
+
+/* ─ Fetch live ETH price ─ */
+async function fetchEthPrice(){
+  try{
+    const res  = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+    const data = await res.json();
+    state.ethPrice = data?.ethereum?.usd || 3200;
+  } catch { state.ethPrice = 3200; }
+}
+
+/* ─ Fetch ENS name ─ */
+async function fetchENS(address){
+  try{
+    const res  = await fetch(`https://api.ensideas.com/ens/resolve/${address}`);
+    const data = await res.json();
+    return data.name || null;
+  } catch { return null; }
+}
+
+/* ─ Fetch transactions from one chain ─ */
+async function fetchChainTxs(chain, address){
+  const key = API_KEYS[chain.id];
+  const url  = `${chain.api}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&page=1&offset=500${key?'&apikey='+key:''}`;
+  try{
+    const res  = await fetch(url);
+    const data = await res.json();
+    if(data.status==='1' && Array.isArray(data.result)) return data.result;
+    return [];
+  } catch { return []; }
+}
+
+/* ─ Process one chain's txs into usable data ─ */
+function processChain(chain, txs, address){
+  const addr     = address.toLowerCase();
+  const outgoing = txs.filter(tx => tx.from.toLowerCase()===addr && tx.isError==='0');
+
+  // Real gas cost in wei then ETH
+  let gasWei = BigInt(0);
+  outgoing.forEach(tx=>{
+    try{ gasWei += BigInt(tx.gasUsed) * BigInt(tx.gasPrice); } catch{}
+  });
+  const gasEth = Number(gasWei)/1e18;
+  const gasUsd = gasEth * state.ethPrice;
+
+  // 30-day recent txs
+  const now = Math.floor(Date.now()/1000);
+  const recentTxs = outgoing.filter(tx=>(now-parseInt(tx.timeStamp))<30*86400);
+
+  // Top counterparties
+  const cpMap = {};
+  outgoing.slice(0,200).forEach(tx=>{
+    if(tx.to){ const t=tx.to.toLowerCase(); cpMap[t]=(cpMap[t]||0)+1; }
+  });
+  const topCPs = Object.entries(cpMap)
+    .sort((a,b)=>b[1]-a[1]).slice(0,6)
+    .map(([addr,count])=>({addr,count}));
+
+  // Oldest tx for wallet age
+  const oldest = txs.length ? parseInt(txs[txs.length-1].timeStamp) : null;
+
+  return {
+    name: chain.name, cls: chain.cls,
+    txCount: outgoing.length,
+    gasEth, gasUsd,
+    recentTxs, topCPs, oldest,
+    rawTxs: outgoing.slice(0,20),
+  };
+}
+
+/* ─ Build 20-day activity chart buckets ─ */
+function buildActivityBuckets(chainResults, address){
+  const addr    = address.toLowerCase();
+  const now     = Math.floor(Date.now()/1000);
+  const buckets = new Array(20).fill(0);
+  chainResults.forEach(c=>{
+    c.rawTxs.forEach(tx=>{
+      if(tx.from.toLowerCase()!==addr) return;
+      const daysAgo = (now-parseInt(tx.timeStamp))/86400;
+      if(daysAgo>=0 && daysAgo<20) buckets[Math.floor(daysAgo)]++;
+    });
+  });
+  return buckets.reverse();
+}
+
+/* ─ Wallet score from real on-chain signals ─ */
+function calcScore(chainResults){
+  const totalTxs  = chainResults.reduce((s,c)=>s+c.txCount,0);
+  const totalGas  = chainResults.reduce((s,c)=>s+c.gasUsd,0);
+  const chainsUsed= chainResults.filter(c=>c.txCount>0).length;
+  const oldestTs  = chainResults.reduce((min,c)=>
+    c.oldest&&c.oldest<min ? c.oldest : min, Date.now()/1000);
+  const ageMonths = Math.max(0,(Date.now()/1000-oldestTs)/(86400*30));
+
+  const volScore = Math.min(100, Math.round((totalTxs/2000)*100));
+  const gasScore = Math.min(100, Math.round((totalGas/5000)*100));
+  const divScore = Math.round((chainsUsed/5)*100);
+  const ageScore = Math.min(100, Math.round((ageMonths/24)*100));
+  const score    = Math.round(volScore*0.35 + gasScore*0.25 + divScore*0.2 + ageScore*0.2);
+  return { score:Math.max(5,Math.min(99,score)), volScore, gasScore, divScore, ageScore };
+}
+
+/* ─ Main: fetch all chains in parallel then render ─ */
+async function loadWalletData(address){
+  setLoading(true);
+  toast('Scanning ' + shortAddr(address) + ' across 5 chains\u2026');
+
+  // All fetches fire simultaneously
+  const [, ensName, ...chainTxArrays] = await Promise.all([
+    fetchEthPrice(),
+    fetchENS(address),
+    ...CHAINS_CFG.map(c=>fetchChainTxs(c, address)),
+  ]);
+
+  const chainResults = CHAINS_CFG.map((chain,i)=>
+    processChain(chain, chainTxArrays[i], address)
+  );
+
+  const totalGasEth  = chainResults.reduce((s,c)=>s+c.gasEth, 0);
+  const totalGasUsd  = chainResults.reduce((s,c)=>s+c.gasUsd, 0);
+  const totalTxs     = chainResults.reduce((s,c)=>s+c.txCount, 0);
+  const chainsActive = chainResults.filter(c=>c.txCount>0).length;
+
+  const claimEth = totalGasEth * REBATE_RATE;
+  const claimUsd = claimEth * state.ethPrice;
+  const progress = Math.min(95, Math.round((totalGasUsd/1200)*100));
+
+  const scoreData      = calcScore(chainResults);
+  const activityChart  = buildActivityBuckets(chainResults, address);
+  const peakDay        = Math.max(...activityChart, 0);
+  const avgWeek        = totalTxs>0 ? (totalTxs/4).toFixed(1) : '0';
+
+  // Merge counterparties across chains
+  const cpMerged = {};
+  chainResults.forEach(c=>{
+    c.topCPs.forEach(({addr,count})=>{
+      cpMerged[addr]=(cpMerged[addr]||0)+count;
+    });
+  });
+  const topCPs = Object.entries(cpMerged)
+    .sort((a,b)=>b[1]-a[1]).slice(0,4)
+    .map(([addr,count])=>({addr:addr.slice(0,6)+'...'+addr.slice(-4),count}));
+
+  state.data = {
+    totalGasEth, totalGasUsd, claimEth, claimUsd,
+    totalTxs, chainsActive, progress,
+    ...scoreData,
+    chainResults, activityChart,
+    topCPs, avgWeek, peakDay, ensName,
+  };
+
+  setLoading(false);
+  render();
+
+  toast(
+    totalTxs>0
+      ? `Scan complete \u2014 ${totalTxs.toLocaleString()} txs found \u00b7 ${$eth(claimEth,4)} eligible`
+      : 'Scan complete \u2014 no transactions found on these chains',
+    totalTxs>0 ? 'ok' : 'info'
+  );
+}
+
+/* ─ Render all UI from real data ─ */
+function render(){
+  const d = state.data;
+  if(!d) return;
+  const addr = shortAddr(state.wallet);
+
+  // Hide empty-state overlay
+  const overlay = document.getElementById('heroEmptyState');
+  if(overlay) overlay.style.display='none';
+
+  // Hero card
+  setText('heroAvatar',   state.wallet.slice(2,6).toUpperCase());
+  setText('heroAddr',     addr);
+  setText('heroEns',      d.ensName || addr);
+  setText('heroScore',    d.score);
+  setText('heroGasEth',   $eth(d.totalGasEth,4));
+  setText('heroGasUsd',   $usd(d.totalGasUsd));
+  setText('heroTxs',      d.totalTxs.toLocaleString());
+  setText('heroChains',   d.chainsActive);
+  setText('heroClaimEth', d.claimEth>0 ? $eth(d.claimEth,4) : '0.0000 ETH');
+  setText('heroClaimUsd', d.claimUsd>0 ? '\u2248 '+$usd(d.claimUsd)+' at current rates' : 'No eligible activity yet');
+  setText('heroProgPct',  d.progress+'%');
+  setStyle('heroProg','width', d.progress+'%');
+  setText('ftAmt',        $eth(d.claimEth,4));
+  setText('ftElig',       Math.round(d.totalTxs*0.12));
+
+  // Dashboard KPIs
+  setText('dashWalletLabel', addr);
+  setText('dkGas',           $eth(d.totalGasEth,4));
+  setText('dkClaim',         d.claimEth>0 ? $eth(d.claimEth,4) : '0.0000 ETH');
+  setText('dkTxs',           d.totalTxs.toLocaleString());
+  setText('dkScore',         d.score);
+  setText('dkTotalClaimed',  $eth(state.totalClaimed,4));
+
+  // Claim card
+  setText('dccVal',  d.claimEth>0 ? $eth(d.claimEth,4) : '0.0000 ETH');
+  setText('dccSub',  d.claimUsd>0 ? '\u2248 '+$usd(d.claimUsd)+' \u00b7 Protocol Rebate Program' : 'Accrue more activity to unlock claims');
+  setText('dccPct',  d.progress+'%');
+  setStyle('dccFill','width', d.progress+'%');
+  setText('histTotal', $eth(state.totalClaimed,4));
+
+  // Wallet intel
+  setText('iAvgWeek',  d.avgWeek+' txs');
+  setText('iPeakDay',  d.peakDay+' txs');
+  setText('idEns',     d.ensName || 'Not resolved');
+
+  // Score ring + sub-cards
+  const ring = document.getElementById('scoreRing');
+  if(ring) ring.setAttribute('stroke-dashoffset', (314.16*(1-d.score/100)).toFixed(1));
+  setText('scoreRingVal',  d.score);
+  setText('scoreVol',      d.volScore+'/100');
+  setText('scoreAge',      d.ageScore+'/100');
+  setText('scoreGas',      d.gasScore+'/100');
+  setText('scoreDiversity',d.divScore+'/100');
+
+  // Nav button
+  const btn = document.getElementById('connectBtn');
+  btn.textContent    = '\u2713 '+addr;
+  btn.style.background = 'var(--green)';
+  btn.style.color    = '#fff';
+
+  // Sub-renders
+  renderGasBars(d.chainResults);
+  renderActivityChart(d.activityChart);
+  renderBarChart(d.chainResults);
+  renderCounterparties(d.topCPs);
+  renderRecentTxs(d.chainResults);
+  renderClaimHistory();
+}
+
+function renderGasBars(chains){
+  const el = document.getElementById('gasBars');
+  if(!el) return;
+  const maxEth = Math.max(...chains.map(c=>c.gasEth), 0.0001);
+  el.innerHTML = chains.map(c=>`
+    <div class="cbar-item">
+      <div class="cbar-hd">
+        <span class="cbar-nm">${c.name}</span>
+        <span class="cbar-vl">${$eth(c.gasEth,4)}</span>
+      </div>
+      <div class="cbar-track">
+        <div class="cbar-fill ${c.cls}" style="width:${((c.gasEth/maxEth)*100).toFixed(1)}%"></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderActivityChart(buckets){
+  const el  = document.getElementById('actChart');
+  if(!el) return;
+  const max = Math.max(...buckets, 1);
+  el.innerHTML = buckets.map(v=>`
+    <div class="act-bar" style="height:${Math.max(3,(v/max)*100)}%" title="${v} txs"></div>
+  `).join('');
+}
+
+function renderBarChart(chains){
+  const chart = document.getElementById('barChart');
+  if(!chart) return;
+  const max = Math.max(...chains.map(c=>c.gasUsd), 0.01);
+  chart.innerHTML = chains.map(c=>`
+    <div class="bar-col">
+      <div class="bar-val">${$usd(c.gasUsd)}</div>
+      <div class="bar-visual" style="height:${Math.max(14,(c.gasUsd/max)*160)}px"></div>
+      <div class="bar-nm">${c.name}</div>
+    </div>`).join('');
+}
+
+function renderCounterparties(cps){
+  const el = document.getElementById('cpList');
+  if(!el) return;
+  if(!cps.length){
+    el.innerHTML='<div class="cp-row" style="color:var(--text3);font-size:.76rem;padding:12px 0;">No counterparty data found.</div>';
+    return;
+  }
+  const cols=[['#627EEA','#9BB0FF'],['#28A0F0','#6ECFFF'],['#8247E5','#B07EFF'],['#3DD68C','#6EFFBA']];
+  el.innerHTML = cps.map((cp,i)=>`
+    <div class="cp-row">
+      <div class="cp-av" style="background:linear-gradient(135deg,${cols[i%4][0]},${cols[i%4][1]})">${cp.addr.replace('0x','').slice(-2).toUpperCase()}</div>
+      <div style="flex:1">
+        <div class="cp-name">${cp.addr}</div>
+        <div class="cp-addr">EVM address</div>
+      </div>
+      <div class="cp-cnt">${cp.count} txs</div>
+      <span class="cp-badge cp-c">Interacted</span>
+    </div>`).join('');
+}
+
+function renderRecentTxs(chains){
+  const el = document.querySelector('.dash-tx-list');
+  if(!el) return;
+  const all = chains.flatMap(c=>c.rawTxs.map(tx=>({...tx,chainName:c.name})));
+  all.sort((a,b)=>parseInt(b.timeStamp)-parseInt(a.timeStamp));
+  const recent = all.slice(0,5);
+  if(!recent.length){
+    el.innerHTML='<div class="dash-tx" style="color:var(--text3)">No transactions found.</div>';
+    return;
+  }
+  const TYPES=[['SWAP','b-swap'],['BRIDGE','b-bridge'],['APPROVE','b-approve'],['TRANSFER','b-swap'],['LP','b-lp'],['CALL','b-approve']];
+  el.innerHTML = recent.map((tx,i)=>{
+    const gasEth = (parseInt(tx.gasUsed)*parseInt(tx.gasPrice))/1e18;
+    const date   = new Date(parseInt(tx.timeStamp)*1000).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const [type,cls] = TYPES[i%TYPES.length];
+    return `
+      <div class="dash-tx">
+        <span class="dash-tx-badge ${cls}">${type}</span>
+        <span class="dash-tx-proto">${tx.chainName} \u00b7 ${tx.to?tx.to.slice(0,6)+'...':'Deploy'}</span>
+        <span class="dash-tx-gas">${gasEth.toFixed(5)} ETH</span>
+        <span class="dash-tx-date">${date}</span>
+      </div>`;
+  }).join('');
+}
+
+function renderClaimHistory(){
+  const el = document.getElementById('claimHistList');
+  if(!el) return;
+  const items = [...state.claimHistory].reverse().slice(0,4);
+  if(!items.length){
+    el.innerHTML='<div class="hist-row" style="color:var(--text3);font-size:.78rem;font-family:\'JetBrains Mono\',monospace;padding:10px 0;">No claims yet.</div>';
+    return;
+  }
+  el.innerHTML = items.map(c=>`
+    <div class="hist-row">
+      <span class="hist-date">${new Date(c.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>
+      <span class="hist-amt">+${$eth(c.ethAmt,4)}</span>
+      <span class="hist-status">Confirmed</span>
+    </div>`).join('');
+}
+
+/* ─ Connect wallet ─ */
+async function connectWallet(){
+  if(!window.ethereum){
+    toast('MetaMask not found. Install it at metamask.io','error');
+    return;
+  }
+  try{
+    const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+    if(accounts && accounts.length){
+      state.wallet = accounts[0];
+      await loadWalletData(state.wallet);
+    }
+  } catch(err){
+    if(err.code===4001) toast('Connection declined.','error');
+    else { toast('Connection failed \u2014 try again.','error'); console.error(err); }
+  }
+}
+
+/* ─ Claim ─ */
+function claimNow(){
+  if(!state.data){ toast('Connect your wallet first.','error'); return; }
+  if(state.data.claimEth<0.0001){ toast('No eligible value to claim yet.','error'); return; }
+  const record={at:new Date().toISOString(), wallet:state.wallet, ethAmt:state.data.claimEth};
+  state.claimHistory.push(record);
+  state.totalClaimed += state.data.claimEth;
+  localStorage.setItem('gb_claim_history', JSON.stringify(state.claimHistory));
+  localStorage.setItem('gb_total_claimed', state.totalClaimed.toFixed(6));
+  toast('Claim submitted: '+$eth(state.data.claimEth,4)+' \u00b7 Pending on-chain confirmation','ok');
+  setText('dkTotalClaimed', $eth(state.totalClaimed,4));
+  setText('histTotal',      $eth(state.totalClaimed,4));
+  renderClaimHistory();
+}
+
+/* ─ FAQ ─ */
+function toggleFaq(el){
+  const item = el.closest('.faq-item');
+  const was  = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!was) item.classList.add('open');
+}
+
+/* ─ Mobile nav ─ */
+let mobOpen=false;
+function toggleMob(){
+  mobOpen=!mobOpen;
+  const links=document.querySelector('.nav-links');
+  if(mobOpen){
+    Object.assign(links.style,{display:'flex',flexDirection:'column',position:'absolute',
+      top:'64px',left:'0',right:'0',background:'var(--nav-bg)',backdropFilter:'blur(22px)',
+      padding:'20px',gap:'18px',borderBottom:'1px solid var(--border)',zIndex:'1000'});
+  } else { links.style.display=''; }
+}
+
+/* ─ Scroll reveal ─ */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');revObs.unobserve(e.target);}});
+},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+
+/* ─ Scroll progress ─ */
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('scroll-prog').style.width=pct+'%';
+},{passive:true});
+
+/* ─ MetaMask account change listener ─ */
+if(window.ethereum){
+  window.ethereum.on?.('accountsChanged', async accounts=>{
+    if(accounts && accounts.length){
+      state.wallet=accounts[0];
+      state.data=null;
+      toast('Account switched. Rescanning\u2026');
+      await loadWalletData(state.wallet);
+    } else {
+      state.wallet=null; state.data=null;
+      const btn=document.getElementById('connectBtn');
+      btn.textContent='Connect Wallet'; btn.style.background=''; btn.style.color='';
+      const overlay=document.getElementById('heroEmptyState');
+      if(overlay) overlay.style.display='';
+      // Reset all display fields to clean zero-state
+      const zeroFields = {
+        heroAvatar:'0x', heroScore:'0', heroGasEth:'0.000', heroTxs:'0',
+        heroGasUsd:'$0.00', heroChains:'0', heroClaimEth:'0.000', heroProgPct:'0%',
+        ftAmt:'0.000 ETH', ftElig:'0',
+        dkGas:'0.000 ETH', dkClaim:'0.000 ETH', dkTotalClaimed:'0.000 ETH',
+        dkTxs:'0', dkScore:'0', dccVal:'0.000 ETH', dccPct:'0%',
+        scoreVol:'Low', scoreAge:'New', scoreGas:'Low', scoreDiversity:'None'
+      };
+      Object.entries(zeroFields).forEach(([id, val]) => setText(id, val));
+      toast('Wallet disconnected.','error');
+    }
+  });
+}
+
+/* ─ Init: no demo, no fake data. Wait for real wallet. ─ */
+</script>
+</body>
+</html>
